@@ -1,0 +1,48 @@
+#
+#                          Copyright (C) 2020 by Rafael Santiago
+#
+# Use of this source code is governed by GPL-v2 license that can
+# be found in the COPYING file.
+#
+#
+
+include Toolsets.hsl
+
+local var srcs type list;
+local var includes type list;
+local var cflags type list;
+local var libraries type list;
+local var ldflags type list;
+
+local var curr_toolset type string;
+local var deps type string;
+
+project libaegis : toolset $curr_toolset :
+                            dependencies $deps : $srcs, $includes, $cflags, $libraries, $ldflags, "libaegis.a";
+
+libaegis.preloading() {
+    $curr_toolset = get_lib_toolset();
+}
+
+libaegis.prologue() {
+    $srcs.ls(".*\\.c$");
+    var platform type string;
+    $platform = hefesto.sys.os_name();
+    if (hefesto.sys.cd($platform)) {
+        $deps = get_c_cpp_deps();
+        $srcs.ls(".*\\.c$");
+        hefesto.sys.cd("..");
+    }
+    $includes = hefesto.sys.get_option("includes");
+    $cflags = hefesto.sys.get_option("cflags");
+    $libraries = hefesto.sys.get_option("libraries");
+    $ldflags = hefesto.sys.get_option("ldflags");
+    $deps = $deps + get_c_cpp_deps();
+    hefesto.sys.echo("_____________\nBUILD STARTED\n");
+}
+
+libaegis.epilogue() {
+    if (hefesto.sys.last_forge_result() == 0) {
+        hefesto.sys.echo("_____________\nBUILD SUCCESS\n");
+    }
+}

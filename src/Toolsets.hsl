@@ -1,0 +1,41 @@
+#
+#                          Copyright (C) 2020 by Rafael Santiago
+#
+# Use of this source code is governed by GPL-v2 license that can
+# be found in the COPYING file.
+#
+#
+
+include ~/toolsets/gcc/gcc-lib.hsl
+include ~/toolsets/clang/clang-lib.hsl
+
+include ~/toolsets/common/utils/lang/c/dependency_scanner.hsl
+
+function get_toolset() : result type string {
+    var option type list;
+    $option = hefesto.sys.get_option("toolset");
+    if ($option.count() > 0) {
+        result $option.item(0);
+    }
+    if (has_gcc()) {
+        result "gcc";
+    }
+    if (has_clang()) {
+        result "clang";
+    }
+    hefesto.sys.echo("ERROR: You need to have GCC or Clang well-installed in your system. Aborted.\n");
+    hefesto.project.abort(1);
+    result "";
+}
+
+function get_lib_toolset() : result type string {
+    result (get_toolset() + "-c-lib");
+}
+
+local function has_gcc() : result type int {
+    result (hefesto.sys.run("gcc --version > /dev/null 2>&1") == 0);
+}
+
+local function has_clang() : result type int {
+    result (hefesto.sys.run("clang --version > /dev/null 2>&1") == 0);
+}

@@ -1,0 +1,1 @@
+--forgefiles=Forgefile.hsl --Forgefile-projects=libaegis --includes=. --obj-output-dir=o --bin-output-dir=../lib
