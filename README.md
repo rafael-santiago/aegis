@@ -1,4 +1,4 @@
-# Aegis
+# ![Medusa by Caravaggio (1571-1610) / Public Domain](https://github.com/rafael-santiago/aegis/blob/master/etc/caravaggio-medusa "Medusa by Caravaggio (1571-1610) / Public Domain") Aegis
 
 ``Aegis`` is a library that allows you detect if your software is being debugged or not on ``Linux``.
 
