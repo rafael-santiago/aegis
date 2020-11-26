@@ -1,3 +1,4 @@
+(B) Write some README. +Documentation, +RepoMaintenance
 (A) Implement gorgon mechanism. +Core
 (A) Think about a better way to automate some test. +Test
 (A) Implement debugger detector for FreeBSD. +Core
