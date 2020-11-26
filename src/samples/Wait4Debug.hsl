@@ -1,0 +1,29 @@
+include ../Toolsets.hsl
+
+local var sources type list;
+local var includes type list;
+local var cflags type list;
+local var libraries type list;
+local var ldflags type list;
+
+local var ctool type string;
+
+project wait4debug : toolset $ctool : $sources, $includes, $cflags, $libraries, $ldflags, "wait4debug";
+
+wait4debug.preloading() {
+    $ctool = get_app_toolset();
+}
+
+wait4debug.prologue() {
+    $sources.add_item("wait4debug.c");
+    $includes = hefesto.sys.get_option("includes");
+    $cflags = hefesto.sys.get_option("cflags");
+    $libraries = hefesto.sys.get_option("libraries");
+    $ldflags = hefesto.sys.get_option("ldflags");
+}
+
+wait4debug.epilogue() {
+    if (hefesto.sys.last_forge_result() == 0) {
+        hefesto.sys.echo("BUILD SUCCESS.\n");
+    }
+}

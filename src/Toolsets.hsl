@@ -7,7 +7,9 @@
 #
 
 include ~/toolsets/gcc/gcc-lib.hsl
+include ~/toolsets/gcc/gcc-app.hsl
 include ~/toolsets/clang/clang-lib.hsl
+include ~/toolsets/clang/clang-app.hsl
 
 include ~/toolsets/common/utils/lang/c/dependency_scanner.hsl
 
@@ -30,6 +32,10 @@ function get_toolset() : result type string {
 
 function get_lib_toolset() : result type string {
     result (get_toolset() + "-c-lib");
+}
+
+function get_app_toolset() : result type string {
+    result (get_toolset() + "-c-app");
 }
 
 local function has_gcc() : result type int {

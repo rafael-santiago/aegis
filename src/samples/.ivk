@@ -1,0 +1,1 @@
+--forgefiles=Wait4Debug.hsl --Wait4Debug-projects=wait4debug --includes=.. --libraries=../../lib --ldflags=-laegis --obj-output-dir=o --bin-output-dir=../../samples
