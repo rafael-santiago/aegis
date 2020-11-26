@@ -64,7 +64,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# make
 black-beard@QueensAnneRevenge:~/src/aegis/src# _
 ```
 
-## Using Aegis
+## Using ``Aegis``
 
 ``Aegis`` is a well-simple tiny library:
 
