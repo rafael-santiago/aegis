@@ -2,11 +2,11 @@
 
 ``Aegis`` is a library that allows you detect if your software is being debugged or not on ``Linux``.
 
-The name is about a lousy acronym: ``A``n ``E``LF's -``g`` ``i``nspection ``s``ignalling. If you are hooked on
+The name is about a lousy acronym: **A**n **E**LF's -**g** **i**nspection **s**ignalling. If you are hooked on
 Greek mithology you should know that ``Aegis`` is the name of the shield gave by ``Athena`` to ``Perseus`` to help him
 kill ``Medusa``.
 
-On ``Windows`` we have plenty of ways to easily do this kind of detection. Anyway, on ``Unix`` world we do not have any
+On ``Windows`` we have plenty of ways to easily do this kind of detection. Opposingly, on ``Unix`` world we do not have any
 standard way. ``Aegis`` is an attempt of filling up this gap.
 
 ## How can I build it?
@@ -42,8 +42,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# hefesto
 black-beard@QueensAnneRevenge:~/src/aegis/src# _
 ```
 
-If all has occurred fine during your build, aegis library was built at ``../lib`` sub-directory. Additionaly, test has ran and
-all samples was built at ``../samples`` sub-directory.
+If all has occurred fine during your build, ``aegis`` library was built at ``../lib`` sub-directory. Additionaly,
+test has ran and all samples was built at ``../samples`` sub-directory.
 
 ### Poor's man build by using ``make``
 
@@ -112,8 +112,8 @@ int main(int argc, char **argv) {
 }
 ```
 
-The program above can be found at src/samples sub-directory under the name ``wait4debug.c``.
-The manual compilation of this code is fairly simple and involes:
+The program above can be found at ``src/samples`` sub-directory under the name ``wait4debug.c``.
+The manual compilation of this code is fairly simple and involves:
 
 - To indicate where ``aegis.h`` is found.
 - To indicate where ``aegis.a`` is found.
