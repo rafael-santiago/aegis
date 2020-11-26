@@ -27,7 +27,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 ### Building it by using ``Hefesto``
 
-After following all steps to put ``Hefesto`` work on your system, just change to ``src`` sub-directory:
+After following all steps to put ``Hefesto`` to work on your system, just change to ``src`` sub-directory:
 
 ```
 black-beard@QueensAnneRevenge:~/src/aegis# cd src
@@ -162,4 +162,5 @@ Nice, the program has exited. If you back to your ``wait4debug`` terminal you wi
 black-beard@QueensAnneRevenge:~/src/aegis/src/sample# ./wait4debug
 *** Wait for debug attachment (pid=29670)
 *** Debugger is attached.
+black-beard@QueensAnneRevenge:~/src/aegis/src/sample# _
 ```
