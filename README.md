@@ -81,7 +81,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 **Remark**: In order to make this anti-debug resilient against library hooking you always should link your software ``static``.
 Moreover, if you want to keep eavesdroppers out as much as possible: link your software static. Otherwise there no necessity
-of worrying about none of it. Because your front door is wide open or you even have a door! Haha!
+of worrying about none of it. Because your front door is wide open or you even have not a door! Haha!
 
 ### Detect debugging
 
