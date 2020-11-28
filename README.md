@@ -167,7 +167,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 
 ### Debugging mitigation
 
-Certain programs requires some debugging avoidance. ``Aegis`` features a nice and straightforward way to implement this kind
+Certain programs require some debugging avoidance. ``Aegis`` features a nice and straightforward way to implement this kind
 of mitigation. For doing that you need:
 
 - To implement a exit checking function with the prototype: ``int(void *)``.
@@ -232,6 +232,7 @@ info: the process id is 28582.
 info: press ctrl + c to exit sample or attach a debugger.
 ^C
 info: gracefully exiting, no debugger was detected.
+black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 ```
 
 Nice but what about give debugging a try? Let's run it again:
