@@ -79,6 +79,10 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 - Protect against debugging by using our simpathetic ``Gorgon`` (yes, I know, Greek mitholoy again).
 
+**Remark**: In order to make this anti-debug resilient against library hooking you always should link your software ``static``.
+Moreover, if you want to keep eavesdroppers out as much as possible: link your software static. Otherwise there no necessity
+of worrying about none of it. Because your front door is wide open or you even have a door! Haha!
+
 ### Detect debugging
 
 In some bug hunting cases is useful to wait for debug before continuing the program execution. Specially concurrent stuff or
