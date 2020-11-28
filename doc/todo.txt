@@ -3,6 +3,7 @@
 (A) Implement debugger detector for NetBSD. +Core
 (A) Implement debugger detector for OpenBSD. +Core
 (A) Wrapper debugger detector for Windows. +Core
+x (B) Implement a well-simple Makefile. +Build
 x (A) Documentation. +Documentation
 x (B) Write some README. +Documentation, +RepoMaintenance
 x (A) Implement gorgon mechanism. +Core

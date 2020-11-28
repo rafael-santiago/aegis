@@ -71,7 +71,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 - It only has one header called ``aegis.h``.
 
-- It only has one library archive called ``aegis.a``.
+- It only has one library archive called ``libaegis.a``.
 
 ``Aegis`` brings you two features:
 
@@ -120,7 +120,7 @@ The program above can be found at ``src/samples`` sub-directory under the name `
 The manual compilation of this code is fairly simple and involves:
 
 - To indicate where ``aegis.h`` is found.
-- To indicate where ``aegis.a`` is found.
+- To indicate where ``libaegis.a`` is found.
 - To pass ``-laegis`` flag to linker.
 - To pass ``-lpthread`` flag if you are on ``Linux``.
 
