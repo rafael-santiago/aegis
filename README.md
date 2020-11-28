@@ -80,8 +80,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 - Protect against debugging by using our simpathetic ``Gorgon`` (yes, I know, Greek mitholoy again).
 
 **Remark**: In order to make this anti-debug resilient against library hooking you always should link your software ``static``.
-Moreover, if you want to keep eavesdroppers out as much as possible: link your software static. Otherwise there no necessity
-of worrying about none of it. Because your front door is wide open or you even have not a door! Haha!
+Moreover, if you want to keep eavesdroppers out as much as possible: link your software static. Otherwise there is no necessity
+of worrying about none of it. Because your front door is wide open or even you do not have a door! Haha!
 
 ### Detect debugging
 
