@@ -1,11 +1,11 @@
 (B) Write some README. +Documentation, +RepoMaintenance
-(A) Implement gorgon mechanism. +Core
 (A) Think about a better way to automate some test. +Test
 (A) Implement debugger detector for FreeBSD. +Core
 (A) Implement debugger detector for NetBSD. +Core
 (A) Implement debugger detector for OpenBSD. +Core
 (A) Wrapper debugger detector for Windows. +Core
 (A) Documentation. +Documentation
+x (A) Implement gorgon mechanism. +Core
 x (B) Write some sample that uses aegis_has_debugger() function. +Samples, +Documentation
 x (A) Implement debugger detector for Linux. +Core
 x (A) Implement build infrastructure. +Build
