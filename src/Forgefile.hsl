@@ -43,6 +43,7 @@ libaegis.prologue() {
 
 libaegis.epilogue() {
     if (hefesto.sys.last_forge_result() == 0) {
+        build("test");
         hefesto.sys.echo("_____________\nBUILD SUCCESS\n");
     }
 }

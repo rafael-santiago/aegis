@@ -13,6 +13,8 @@ include ~/toolsets/clang/clang-app.hsl
 
 include ~/toolsets/common/utils/lang/c/dependency_scanner.hsl
 
+include ~/fsutil.hsl
+
 function get_toolset() : result type string {
     var option type list;
     $option = hefesto.sys.get_option("toolset");
@@ -44,4 +46,56 @@ local function has_gcc() : result type int {
 
 local function has_clang() : result type int {
     result (hefesto.sys.run("clang --version > /dev/null 2>&1") == 0);
+}
+
+function build(libname type string) : result type none {
+    var func_addr type int;
+    $func_addr = hefesto.sys.get_func_addr("build_" + $libname);
+    if ($func_addr == 0) {
+        hefesto.sys.echo("ERROR: No support for " + $libname + " build.\n");
+        hefesto.project.abort(1);
+    }
+    hefesto.sys.call_func_addr($func_addr);
+}
+
+local function build_cutest() : result type none {
+    if (isfile("cutest/src/lib/libcutest.a") == 0) {
+        var oldcwd type string;
+        $oldcwd = hefesto.sys.pwd();
+        if (hefesto.sys.cd("cutest/src") != 1) {
+            hefesto.sys.echo("ERROR: Unable to find libcutest's submodule.\n");
+            hefesto.project.abort(1);
+        }
+        if (hefesto.sys.run("hefesto") != 0) {
+            hefesto.project.abort(1);
+        }
+        hefesto.sys.cd($oldcwd);
+    }
+}
+
+local function build_samples() : result type none {
+    var oldcwd type string;
+    $oldcwd = hefesto.sys.pwd();
+    if (hefesto.sys.cd("../samples") != 1) {
+        hefesto.sys.echo("ERROR: Unable to find samples's sub-directory.\n");
+        hefesto.project.abort(1);
+    }
+    if (hefesto.sys.run("hefesto") != 0) {
+        hefesto.project.abort(1);
+    }
+    hefesto.sys.cd($oldcwd);
+}
+
+local function build_test() : result type none {
+    var oldcwd type string;
+    $oldcwd = hefesto.sys.pwd();
+    if (hefesto.sys.cd("test") != 1) {
+        hefesto.sys.echo("ERROR: Unable to find test's sub-directory.\n");
+        hefesto.project.abort(1);
+    }
+    if (hefesto.sys.run("hefesto") != 0) {
+        hefesto.sys.echo("___________\nBUILD ERROR\n");
+        hefesto.project.abort(1);
+    }
+    hefesto.sys.cd($oldcwd);
 }

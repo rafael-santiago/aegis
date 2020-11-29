@@ -3,3 +3,5 @@ src/o/*
 src/.Forgefile-*
 samples/*
 src/samples/o/*
+src/test/o/*
+src/test/bin/*

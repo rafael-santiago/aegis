@@ -1,0 +1,1 @@
+--forgefiles=Forgefile.hsl --Forgefile-projects=aegis-tests --includes=..,cutest/src --ldflags=-laegis,-lcutest --libraries=../../lib,cutest/src/lib --obj-output-dir=o --bin-output-dir=bin

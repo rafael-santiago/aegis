@@ -1,0 +1,67 @@
+#
+#                          Copyright (C) 2020 by Rafael Santiago
+#
+# Use of this source code is governed by GPL-v2 license that can
+# be found in the COPYING file.
+#
+#
+
+include ../Toolsets.hsl
+
+local var sources type list;
+local var includes type list;
+local var cflags type list;
+local var libraries type list;
+local var ldflags type list;
+local var appname type string;
+
+local var ctool type string;
+
+project aegis-tests : toolset $ctool : $sources, $includes, $cflags, $libraries, $ldflags, $appname;
+
+aegis-tests.preloading() {
+    $ctool = get_app_toolset();
+}
+
+aegis-tests.prologue() {
+    $sources.ls(".*\\.c$");
+    $includes = hefesto.sys.get_option("includes");
+    $cflags = hefesto.sys.get_option("cflags");
+    $libraries = hefesto.sys.get_option("libraries");
+    $ldflags = hefesto.sys.get_option("ldflags");
+    $appname = "aegis-tests";
+    if (hefesto.sys.os_name() == "linux") {
+        $ldflags.add_item("-ldl");
+        $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "freebsd") {
+        $ldflags.add_item("-lexecinfo");
+        $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "netbsd") {
+        $ldflags.add_item("-lexecinfo");
+        $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "openbsd") {
+        $ldflags.add_item("-lexecinfo");
+        $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "minix") {
+        $ldflags.add_item("-lexecinfo");
+    } else if (hefesto.sys.os_name() == "solaris") {
+        $ldflags.add_item("-lpthread");
+        $cflags.add_item("-DNO_CUTEST_BACKTRACING");
+    }
+    build("cutest");
+    build("samples");
+}
+
+aegis-tests.epilogue() {
+    if (hefesto.sys.last_forge_result() == 0) {
+        run_aegis_tests();
+    }
+}
+
+local function run_aegis_tests() : result type none {
+    var cmd type string;
+    $cmd = hefesto.sys.make_path("bin", $appname);
+    if (hefesto.sys.run($cmd) != 0) {
+        hefesto.project.abort(1);
+    }
+}
