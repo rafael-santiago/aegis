@@ -1,7 +1,7 @@
 ![Medusa by Caravaggio (1571-1610) / Public Domain](https://github.com/rafael-santiago/aegis/blob/master/etc/caravaggio_medusa.png "Medusa by Caravaggio (1571-1610) / Public Domain")
 # Aegis
 
-``Aegis`` is a library that allows you detect if your software is being debugged or not on ``Linux``.
+``Aegis`` is a library that allows you detect if your software is being debugged or not on ``Linux`` and ``FreeBSD``.
 
 The name is about a lousy acronym: **A**n **E**LF's -**g** **i**nspection **s**ignalling. If you are hooked on
 Greek mithology you should know that ``Aegis`` is the name of the shield gave by ``Athena`` to ``Perseus`` to help him
@@ -122,7 +122,7 @@ The manual compilation of this code is fairly simple and involves:
 - To indicate where ``aegis.h`` is found.
 - To indicate where ``libaegis.a`` is found.
 - To pass ``-laegis`` flag to linker.
-- To pass ``-lpthread`` flag if you are on ``Linux``.
+- To pass ``-lpthread`` flag if you are on ``Linux`` or ``FreeBSD``.
 
 All in one compilation line:
 

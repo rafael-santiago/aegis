@@ -11,6 +11,13 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
+#if defined(__FreeBSD__)
+# include <sys/types.h>
+# include <sys/user.h>
+# include <sys/sysctl.h>
+# include <unistd.h>
+# include <sys/wait.h>
+#endif
 
 static FILE *g_test_proc = NULL;
 
@@ -48,15 +55,19 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 # error Some code wanted.
 #endif
     pid = system_nowait(wait4debug_binarypath);
+    CUTE_ASSERT(is_process_running(pid));
     gdb_proc = gdb();
     CUTE_ASSERT(gdb_proc != NULL);
     gdb_attach(gdb_proc, pid);
     gdb_continue(gdb_proc);
-    usleep(2);
+#if defined(__FreeBSD__)
+    sleep(1);
+#endif
     fclose(gdb_proc);
     CUTE_ASSERT(!is_process_running(pid));
 
     pid = system_nowait(wait4debug_binarypath);
+    CUTE_ASSERT(is_process_running(pid));
     gdb_proc = gdb();
     CUTE_ASSERT(gdb_proc != NULL);
     ntry = 10;
@@ -66,6 +77,9 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
         usleep(2);
     } while (ntry-- > 0);
     fclose(gdb_proc);
+#if defined(__FreeBSD__)
+    sleep(1);
+#endif
     CUTE_ASSERT(!is_process_running(pid));
 CUTE_TEST_CASE_END
 
@@ -89,6 +103,7 @@ static void gdb_next(FILE *gdb) {
 }
 
 static int is_process_running(const pid_t pid) {
+#if defined(__linux__)
     char proc_buf[1024], *bp, *bp_end;
     FILE *fp;
     int is = 1;
@@ -107,6 +122,18 @@ static int is_process_running(const pid_t pid) {
         fclose(fp);
     }
     return is;
+#elif defined(__FreeBSD__)
+    int pidinfo[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PID, (int)pid };
+    struct kinfo_proc kp;
+    size_t kp_len = sizeof(kp);
+    int is = 1;
+    if (sysctl(pidinfo, nitems(pidinfo), &kp, &kp_len, NULL, 0) == 0) {
+        is = (kp.ki_stat != SZOMB && kp.ki_stat != SSLEEP /*&& kp.ki_stat != SLOCK*/);
+    }
+    return is;
+#else
+# Some code wanted.
+#endif
 }
 
 static pid_t system_nowait(const char *command) {

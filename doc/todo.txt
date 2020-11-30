@@ -1,7 +1,7 @@
-(A) Implement debugger detector for FreeBSD. +Core
 (A) Implement debugger detector for NetBSD. +Core
 (A) Implement debugger detector for OpenBSD. +Core
 (A) Wrapper debugger detector for Windows. +Core
+x (A) Implement debugger detector for FreeBSD. +Core
 x (A) Think about a better way to automate some test. +Test
 x (B) Implement a well-simple Makefile. +Build
 x (A) Documentation. +Documentation
