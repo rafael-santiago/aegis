@@ -19,12 +19,19 @@
 # include <sys/wait.h>
 #endif
 
+#define TEST_SLEEP_IN_SECS 5
+
 static FILE *g_test_proc = NULL;
 
 static FILE *gdb(void);
-static void gdb_attach(FILE *gdb, const pid_t pid);
-static void gdb_continue(FILE *gdb);
-static void gdb_next(FILE *gdb);
+static FILE *lldb(void);
+
+static void dbg_attach(FILE *gdb, const pid_t pid);
+static void dbg_continue(FILE *gdb);
+static void dbg_next(FILE *gdb);
+
+static int has_gdb(void);
+static int has_lldb(void);
 
 static int is_process_running(const pid_t pid);
 
@@ -43,9 +50,10 @@ CUTE_TEST_CASE(aegis_tests)
 CUTE_TEST_CASE_END
 
 CUTE_TEST_CASE(aegis_has_debugger_tests)
-    FILE *gdb_proc = NULL;
+    FILE *gdb_proc = NULL, *lldb_proc = NULL;
     pid_t pid;
     int ntry = 20;
+    int run_gdb_tests = 0, run_lldb_tests = 0;
     char *wait4debug_binarypath =
 #if defined(__unix__)
         "../../samples/wait4debug";
@@ -54,33 +62,72 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 #else
 # error Some code wanted.
 #endif
-    pid = system_nowait(wait4debug_binarypath);
-    CUTE_ASSERT(is_process_running(pid));
-    gdb_proc = gdb();
-    CUTE_ASSERT(gdb_proc != NULL);
-    gdb_attach(gdb_proc, pid);
-    gdb_continue(gdb_proc);
-#if defined(__FreeBSD__)
-    sleep(1);
-#endif
-    fclose(gdb_proc);
-    CUTE_ASSERT(!is_process_running(pid));
+    run_gdb_tests = has_gdb();
+    run_lldb_tests = has_lldb();
+    CUTE_ASSERT(run_gdb_tests || run_lldb_tests);
 
-    pid = system_nowait(wait4debug_binarypath);
-    CUTE_ASSERT(is_process_running(pid));
-    gdb_proc = gdb();
-    CUTE_ASSERT(gdb_proc != NULL);
-    ntry = 10;
-    gdb_attach(gdb_proc, pid);
-    do {
-        gdb_next(gdb_proc);
-        usleep(2);
-    } while (ntry-- > 0);
-    fclose(gdb_proc);
+    // INFO(Rafael): Testing detection with GDB.
+    if (run_gdb_tests) {
+        pid = system_nowait(wait4debug_binarypath);
+        CUTE_ASSERT(is_process_running(pid));
+        gdb_proc = gdb();
+        CUTE_ASSERT(gdb_proc != NULL);
+        dbg_attach(gdb_proc, pid);
+        dbg_continue(gdb_proc);
 #if defined(__FreeBSD__)
-    sleep(1);
+        sleep(TEST_SLEEP_IN_SECS);
 #endif
-    CUTE_ASSERT(!is_process_running(pid));
+        fclose(gdb_proc);
+        CUTE_ASSERT(!is_process_running(pid));
+
+        pid = system_nowait(wait4debug_binarypath);
+        CUTE_ASSERT(is_process_running(pid));
+        gdb_proc = gdb();
+        CUTE_ASSERT(gdb_proc != NULL);
+        ntry = 10;
+        dbg_attach(gdb_proc, pid);
+        do {
+            dbg_next(gdb_proc);
+            usleep(2);
+        } while (ntry-- > 0);
+        fclose(gdb_proc);
+#if defined(__FreeBSD__)
+        sleep(TEST_SLEEP_IN_SECS);
+#endif
+        CUTE_ASSERT(!is_process_running(pid));
+    }
+
+    // INFO(Rafael): Testing detection with LLDB.
+    if (run_lldb_tests) {
+        pid = system_nowait(wait4debug_binarypath);
+        CUTE_ASSERT(is_process_running(pid));
+        lldb_proc = lldb();
+        CUTE_ASSERT(lldb_proc != NULL);
+        dbg_attach(lldb_proc, pid);
+        dbg_continue(lldb_proc);
+#if defined(__FreeBSD__)
+        sleep(TEST_SLEEP_IN_SECS);
+#endif
+        fclose(lldb_proc);
+        CUTE_ASSERT(!is_process_running(pid));
+
+        pid = system_nowait(wait4debug_binarypath);
+        CUTE_ASSERT(is_process_running(pid));
+        lldb_proc = lldb();
+        CUTE_ASSERT(lldb_proc != NULL);
+        ntry = 10;
+        dbg_attach(lldb_proc, pid);
+        do {
+            dbg_next(lldb_proc);
+            usleep(2);
+        } while (ntry-- > 0);
+        fclose(lldb_proc);
+#if defined(__FreeBSD__)
+        sleep(TEST_SLEEP_IN_SECS);
+#endif
+        CUTE_ASSERT(!is_process_running(pid));
+    }
+
 CUTE_TEST_CASE_END
 
 CUTE_TEST_CASE(aegis_set_gorgon_tests)
@@ -90,16 +137,28 @@ static FILE *gdb(void) {
     return popen("gdb", "w");
 }
 
-static void gdb_attach(FILE *gdb, const pid_t pid) {
-    fprintf(gdb, "attach %d\n", pid);
+static void dbg_attach(FILE *dbg, const pid_t pid) {
+    fprintf(dbg, "attach %d\n", pid);
 }
 
-static void gdb_continue(FILE *gdb) {
-    fprintf(gdb, "continue\n");
+static void dbg_continue(FILE *dbg) {
+    fprintf(dbg, "continue\n");
 }
 
-static void gdb_next(FILE *gdb) {
-    fprintf(gdb, "next\n");
+static void dbg_next(FILE *dbg) {
+    fprintf(dbg, "next\n");
+}
+
+static FILE *lldb(void) {
+    return popen("lldb", "w");
+}
+
+static int has_gdb(void) {
+    return (system("gdb --version > /dev/null 2>&1") == 0);
+}
+
+static int has_lldb(void) {
+    return (system("lldb --version > /dev/null 2>&1") == 0);
 }
 
 static int is_process_running(const pid_t pid) {
