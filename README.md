@@ -10,6 +10,12 @@ kill ``Medusa``.
 On ``Windows`` we have plenty of ways to easily do this kind of detection. Opposingly, on ``Unix`` world we do not have any
 standard way. ``Aegis`` is an attempt of filling up this gap.
 
+You can use ``Aegis`` as a ``anti-debugging mitigation`` or as a ``debugging facility``. It just depends on you and your
+current requirements.
+
+Originally, I wrote this library to use on another tool of mine called [``blackcat``](https://github.com/rafael-santiago/blackcat)
+as a ``anti-debugging`` stuff.
+
 ## How can I build it?
 
 I am using a build tool of mine called [``Hefesto``](https://github.com/rafael-santiago/hefesto) (Yes, mithology, I love it).
@@ -64,6 +70,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# make
 (...)
 black-beard@QueensAnneRevenge:~/src/aegis/src# _
 ```
+
+If you are on some ``BSD-like``, beside ``make`` you  also need ``gmake`` to run this limited alternative build.
 
 ## Using ``Aegis``
 

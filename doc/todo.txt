@@ -1,6 +1,8 @@
 (A) Implement debugger detector for NetBSD. +Core
 (A) Implement debugger detector for OpenBSD. +Core
 (A) Wrapper debugger detector for Windows. +Core
+x (C) Make poor's man build more portable between different
+      versions of make tool. +Build
 x (B) Change license to BSD-4-clause.
 x (A) Also test against LLDB when it is present. +Test
 x (A) Implement debugger detector for FreeBSD. +Core
