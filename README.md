@@ -18,10 +18,10 @@ as an ``anti-debugging`` stuff.
 
 # Contents
 
-- [How can I build it](how-can-i-build-it?)
+- [How can I build it](how-can-i-build-it)
     - [How should I easily clone ``Aegis``](#how-should-i-easily-close-aegis)
     - [Build it by using ``Hefesto``](#building-it-by-using-hefesto)
-    - [Poor man's build by using make](#poor-man's-build-by-using-make)
+    - [Poor man's build by using make](#poor-mans-build-by-using-make)
 - [Using Aegis](#using-aegis)
     - [Detecting debugging](#detecting-debugging)
         - [Testing ``wait4debug``](#testing-wait4debug)
@@ -35,6 +35,8 @@ I am using a build tool of mine called [``Hefesto``](https://github.com/rafael-s
 If you are looking for running the build in all its capabilities you need ``Hefesto`` otherwise I also supply a well-simple
 Makefile.
 
+[Back](#contents)
+
 ### How should I easily clone ``Aegis``?
 
 The easiest way is:
@@ -43,6 +45,8 @@ The easiest way is:
 black-beard@QueenAnneRevenge:~/src# git clone https://github.com/rafael-santiago/aegis --recursive
 black-beard@QueensAnneRevenge:~/src/aegis/src# _
 ```
+
+[Back](#contents)
 
 ### Building it by using ``Hefesto``
 
@@ -63,6 +67,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 If all has occurred fine during your build, ``aegis`` library was built at ``../lib`` sub-directory. Additionaly,
 test has ran and all samples was built at ``../samples`` sub-directory.
+
+[Back](#contents)
 
 ### Poor man's build by using ``make``
 
@@ -85,6 +91,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 If you are on some ``BSD-like``, besides ``make`` you also need ``gmake`` to run this limited alternative build.
 
+[Back](#contents)
+
 ## Using ``Aegis``
 
 ``Aegis`` is a well-simple tiny library:
@@ -102,6 +110,8 @@ If you are on some ``BSD-like``, besides ``make`` you also need ``gmake`` to run
 **Remark**: In order to make this anti-debug resilient against library hooking you always should link your software ``static``.
 Moreover, if you want to keep eavesdroppers out as much as possible: link your software static. Otherwise there is no necessity
 of worrying about none of it. Because your front door is wide open or you do not have even a door! Haha!
+
+[Back](#contents)
 
 ### Detect debugging
 
@@ -153,6 +163,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src/samples# gcc -I.. -L../../lib \
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 ```
 
+[Back](#contents)
+
 #### Testing ``wait4debug``
 
 On a terminal run ``wait4debug``:
@@ -189,6 +201,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./wait4debug
 *** Debugger is attached.
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 ```
+
+[Back](#contents)
 
 ### Debugging mitigation
 
@@ -238,6 +252,8 @@ int main(int argc, char **argv) {
 ```
 
 You can find the presented code into ``src/samples/setgorgon.c``.
+
+[Back](#contents)
 
 #### Testing ``setgorgon``
 
@@ -310,3 +326,5 @@ bad people, bad things and stuff. Maybe it could be the origin of the ``Medusa``
 Well, that is it, here we are using gorgon to scare debuggers! That's all folks!
 
 ;)
+
+[Back](#contents)
