@@ -106,6 +106,8 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 Once done the distribution package will be at ``../lib`` sub-directory. The package's name depends on your system.
 It will follow this nomenclature scheme: ``libaegis-<os-name>.zip``.
 
+[``Back``](#contents)
+
 ## Using ``Aegis``
 
 ``Aegis`` is a well-simple tiny library:
