@@ -18,23 +18,15 @@ as an ``anti-debugging`` stuff.
 
 # Contents
 
-[How can I build it](how-can-i-build-it)
-
-    [How should I easily clone ``Aegis``](#how-should-i-easily-close-aegis)
-
-    [Build it by using ``Hefesto``](#building-it-by-using-hefesto)
-
-    [Poor man's build by using make](#poor-mans-build-by-using-make)
-
-[Using Aegis](#using-aegis)
-
-    [Detecting debugging](#detecting-debugging)
-
-        [Testing ``wait4debug``](#testing-wait4debug)
-
-    [Debugging mitigation](#debugging-mitigation)
-
-        [Testing ``setgorgon``](#testing-setgorgon)
+- [How can I build it](how-can-i-build-it?)
+    - [How should I easily clone ``Aegis``](#how-should-i-easily-close-aegis)
+    - [Build it by using ``Hefesto``](#building-it-by-using-hefesto)
+    - [Poor man's build by using make](#poor-man's-build-by-using-make)
+- [Using Aegis](#using-aegis)
+    - [Detecting debugging](#detecting-debugging)
+        - [Testing ``wait4debug``](#testing-wait4debug)
+    - [Debugging mitigation](#debugging-mitigation)
+        - [Testing ``setgorgon``](#testing-setgorgon)
 
 ## How can I build it?
 
