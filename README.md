@@ -23,7 +23,7 @@ as an ``anti-debugging`` stuff.
     - [Build it by using ``Hefesto``](#building-it-by-using-hefesto)
     - [Poor man's build by using make](#poor-mans-build-by-using-make)
 - [Using Aegis](#using-aegis)
-    - [Detecting debugging](#detecting-debugging)
+    - [Debugging detection](#debugging-detection)
         - [Testing ``wait4debug``](#testing-wait4debug)
     - [Debugging mitigation](#debugging-mitigation)
         - [Testing ``setgorgon``](#testing-setgorgon)
@@ -35,7 +35,7 @@ I am using a build tool of mine called [``Hefesto``](https://github.com/rafael-s
 If you are looking for running the build in all its capabilities you need ``Hefesto`` otherwise I also supply a well-simple
 Makefile.
 
-[Back](#contents)
+[``Back``](#contents)
 
 ### How should I easily clone ``Aegis``?
 
@@ -46,7 +46,7 @@ black-beard@QueenAnneRevenge:~/src# git clone https://github.com/rafael-santiago
 black-beard@QueensAnneRevenge:~/src/aegis/src# _
 ```
 
-[Back](#contents)
+[``Back``](#contents)
 
 ### Building it by using ``Hefesto``
 
@@ -68,7 +68,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 If all has occurred fine during your build, ``aegis`` library was built at ``../lib`` sub-directory. Additionaly,
 test has ran and all samples was built at ``../samples`` sub-directory.
 
-[Back](#contents)
+[``Back``](#contents)
 
 ### Poor man's build by using ``make``
 
@@ -91,7 +91,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 If you are on some ``BSD-like``, besides ``make`` you also need ``gmake`` to run this limited alternative build.
 
-[Back](#contents)
+[``Back``](#contents)
 
 ## Using ``Aegis``
 
@@ -111,9 +111,9 @@ If you are on some ``BSD-like``, besides ``make`` you also need ``gmake`` to run
 Moreover, if you want to keep eavesdroppers out as much as possible: link your software static. Otherwise there is no necessity
 of worrying about none of it. Because your front door is wide open or you do not have even a door! Haha!
 
-[Back](#contents)
+[``Back``](#contents)
 
-### Detect debugging
+### Debugging detection
 
 In some bug hunting cases is useful to wait for debug before continuing the program execution. Specially concurrent stuff or
 even event oriented processing. In this case you can use ``aegis_has_debugger()`` function.
@@ -163,7 +163,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src/samples# gcc -I.. -L../../lib \
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 ```
 
-[Back](#contents)
+[``Back``](#contents)
 
 #### Testing ``wait4debug``
 
@@ -202,7 +202,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./wait4debug
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 ```
 
-[Back](#contents)
+[``Back``](#contents)
 
 ### Debugging mitigation
 
@@ -253,7 +253,7 @@ int main(int argc, char **argv) {
 
 You can find the presented code into ``src/samples/setgorgon.c``.
 
-[Back](#contents)
+[``Back``](#contents)
 
 #### Testing ``setgorgon``
 
@@ -327,4 +327,4 @@ Well, that is it, here we are using gorgon to scare debuggers! That's all folks!
 
 ;)
 
-[Back](#contents)
+[``Back``](#contents)
