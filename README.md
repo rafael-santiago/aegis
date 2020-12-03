@@ -16,6 +16,18 @@ current requirements.
 Originally, I wrote this library to use on another tool of mine called [``blackcat``](https://github.com/rafael-santiago/blackcat)
 as an ``anti-debugging`` stuff.
 
+# Contents
+
+[How can I build it](how-can-i-build-it)
+    [How should I easily clone ``Aegis``](how-should-i-easily-close-aegis)
+    [Build it by using ``Hefesto``](building-it-by-using-hefesto)
+    [Poor man's build by using make](poor-mans-build-by-using-make)
+[Using Aegis](using-aegis)
+    [Detecting debugging](detecting-debugging)
+        [Testing ``wait4debug``](testing-wait4debug)
+    [Debugging mitigation](debugging-mitigation)
+        [Testing ``setgorgon``](testing-setgorgon)
+
 ## How can I build it?
 
 I am using a build tool of mine called [``Hefesto``](https://github.com/rafael-santiago/hefesto) (Yes, mithology, I love it).
@@ -23,7 +35,7 @@ I am using a build tool of mine called [``Hefesto``](https://github.com/rafael-s
 If you are looking for running the build in all its capabilities you need ``Hefesto`` otherwise I also supply a well-simple
 Makefile.
 
-## How should I easily clone ``Aegis``?
+### How should I easily clone ``Aegis``?
 
 The easiest way is:
 
