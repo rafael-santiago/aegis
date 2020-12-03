@@ -52,7 +52,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 If all has occurred fine during your build, ``aegis`` library was built at ``../lib`` sub-directory. Additionaly,
 test has ran and all samples was built at ``../samples`` sub-directory.
 
-### Poor's man build by using ``make``
+### Poor man's build by using ``make``
 
 Well this will just build the library at ``../lib``. The clumsy idea here is: If all has compiled so all is working...
 
@@ -289,8 +289,8 @@ No gracefully exiting message, it was really aborted to avoid debugging. Our gor
 
 Maybe you are asking why call this feature of ``Gorgon``. Well, ``Perseus`` myth tells that ``Athena`` gave him a shield (aegis)
 for help him to kill ``Medusa`` (also known as ``Gorgon``).``Perseus`` has killed her using ``aegis``. By watching for her
-reflection in the shield he used the sword (also given by ``Athena``) to chop off ``Medusa``'s head. After that ``Athena`` got
-``aegis`` back and in memory of ``Medusa``, ``Athena`` put ``Medusa``'s head in this shield.
+reflection in the shield he used the sword (also given by ``Athena``) to chop off ``Medusa``'s head. After that ``Athena`` has
+picked ``aegis`` back and in memory of ``Medusa``, ``Athena`` put ``Medusa``'s head in this shield.
 
 Ancient greeks had used to sculpt or even drawn ``Gorgon`` heads at the front door of their houses in order to scare enemies,
 bad people, bad things and stuff. Maybe it could be the origin of the ``Medusa``'s myth, who knows...
