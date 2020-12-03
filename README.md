@@ -22,6 +22,7 @@ as an ``anti-debugging`` stuff.
     - [How should I easily clone ``Aegis``?](#how-should-i-easily-clone-aegis)
     - [Build it by using ``Hefesto``](#building-it-by-using-hefesto)
     - [Poor man's build by using make](#poor-mans-build-by-using-make)
+    - [Making a distribution package](#making-a-distribution-package)
 - [Using Aegis](#using-aegis)
     - [Debugging detection](#debugging-detection)
         - [Testing ``wait4debug``](#testing-wait4debug)
@@ -92,6 +93,18 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 If you are on some ``BSD-like``, besides ``make`` you also need ``gmake`` to run this limited alternative build.
 
 [``Back``](#contents)
+
+### Making a distribution package
+
+You can easily do it by invoking ``Hefesto`` passing the build option ``--mkdist``:
+
+```
+black-beard@QueensAnneRevenge:~/src/aegis/src# hefesto --mkdist
+black-beard@QueensAnneRevenge:~/src/aegis/src# _
+```
+
+Once done the distribution package will be at ``../lib`` sub-directory. The package's name depends on your system.
+It will follow this nomenclature scheme: ``libaegis-<os-name>.zip``.
 
 ## Using ``Aegis``
 

@@ -25,6 +25,11 @@ libaegis.preloading() {
 }
 
 libaegis.prologue() {
+    var option type list;
+    $option = hefesto.sys.get_option("mkdist");
+    if ($option.count() > 0) {
+        build("dist");
+    }
     $srcs.ls(".*\\.c$");
     var platform type string;
     $platform = hefesto.sys.os_name();

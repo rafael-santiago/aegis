@@ -99,3 +99,89 @@ local function build_test() : result type none {
     }
     hefesto.sys.cd($oldcwd);
 }
+
+local function build_dist() : result type none {
+    if (has_zip() == 0) {
+        hefesto.sys.echo("ERROR: Unable to make Aegis' distribution package. Your system does not have zip tool.\n");
+        hefesto.project.abort(1);
+    }
+
+    if (isfile("../lib/libaegis.a") == 0) {
+        if (hefesto.sys.run("hefesto") != 0) {
+            hefesto.sys.echo("ERROR: Unable to make Aegis' distribution package. This is not compiling on your system!\n");
+            hefesto.project.abort(1);
+        }
+    }
+
+    var headers type list;
+    $headers.ls(".*\\.h$");
+
+    var oldcwd type string;
+    $oldcwd = hefesto.sys.pwd();
+
+    hefesto.sys.cd("..");
+    if (isdir("include") == 1) {
+        var old_headers type list;
+        hefesto.sys.cd("include");
+        var o type int;
+        $o = 0;
+        while ($o < $old_headers.count()) {
+            hefesto.sys.rm($old_headers.item($o));
+            $o = $o + 1;
+        }
+        hefesto.sys.cd("..");
+    } else {
+        hefesto.sys.mkdir("include");
+    }
+
+    var h type int;
+    $h = 0;
+    while ($h < $headers.count()) {
+        var curr_header_path type string;
+        $curr_header_path = $headers.item($h);
+        hefesto.sys.cp($curr_header_path, "include/" + filenamefrompath($curr_header_path));
+        $h = $h + 1;
+    }
+
+    var distpkg_error type int;
+    var distpkg_name_path type string;
+    hefesto.sys.rm($distpkg_name_path);
+    $distpkg_name_path = "lib/libaegis-" + hefesto.sys.os_name() + ".zip";
+    var zip_command type string;
+    $zip_command = "zip " + $distpkg_name_path + " lib/*.a include/*.h";
+    if (hefesto.sys.os_name() != "windows") {
+        $zip_command = $zip_command + " > /dev/null 2>&1";
+    } else {
+        $zip_command = $zip_command + " > nul 2>&1";
+    }
+    $distpkg_error = hefesto.sys.run($zip_command);
+
+    hefesto.sys.cd("include");
+    $o = 0;
+    while ($o < $old_headers.count()) {
+        hefesto.sys.rm($old_headers.item($o));
+        $o = $o + 1;
+    }
+    hefesto.sys.cd("..");
+    hefesto.sys.rmdir("include");
+
+    if ($distpkg_error == 0) {
+        hefesto.sys.echo("INFO: Distribution package successfuly built on '" + $distpkg_name_path + "'.\n");
+    } else {
+        hefesto.sys.echo("ERROR: Unable to make distribution package.\n");
+    }
+
+    hefesto.sys.cd($oldcwd);
+
+    hefesto.project.abort($distpkg_error);
+}
+
+local function has_zip() : result type int {
+    var exit_code type int;
+    if (hefesto.sys.os_name() != "windows") {
+        $exit_code = hefesto.sys.run("zip --version > /dev/null 2>&1");
+    } else {
+        $exit_code = hefesto.sys.run("zip --version > nul 2>&1");
+    }
+    result ($exit_code == 0);
+}
