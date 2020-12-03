@@ -123,6 +123,7 @@ local function build_dist() : result type none {
     if (isdir("include") == 1) {
         var old_headers type list;
         hefesto.sys.cd("include");
+        $old_headers.ls(".*\\.h$");
         var o type int;
         $o = 0;
         while ($o < $old_headers.count()) {
@@ -158,6 +159,8 @@ local function build_dist() : result type none {
 
     hefesto.sys.cd("include");
     $o = 0;
+    $old_headers.clear();
+    $old_headers.ls(".*\\.h$");
     while ($o < $old_headers.count()) {
         hefesto.sys.rm($old_headers.item($o));
         $o = $o + 1;
