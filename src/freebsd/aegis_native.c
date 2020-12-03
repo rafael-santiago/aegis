@@ -32,12 +32,9 @@ int aegis_has_debugger(void) {
     int is = 0;
 
     if ((cpid = fork()) == 0) {
-        while (!is) {
-            if (sysctl(pidinfo_args, nitems(pidinfo_args),
-                       &kp, &kp_len, NULL, 0) == 0) {
-                is = (kp.ki_stat == SSTOP);
-            }
-            usleep(1);
+        if (sysctl(pidinfo_args, nitems(pidinfo_args),
+                   &kp, &kp_len, NULL, 0) == 0) {
+            is = (kp.ki_stat == SSTOP || (kp.ki_flag & P_TRACED));
         }
         exit(is);
     } else {
@@ -73,6 +70,7 @@ static void *aegis_gorgon_routine(void *args) {
         if (should_exit != NULL) {
             stop = should_exit(exit_args);
         }
+        usleep(1);
     }
 
     return NULL;

@@ -1,6 +1,8 @@
 (A) Implement debugger detector for NetBSD. +Core
 (A) Implement debugger detector for OpenBSD. +Core
 (A) Wrapper debugger detector for Windows. +Core
+x (A) Make FreeBSD tests more stable. +Test
+x (A) Avoid busy-waiting on FreeBSD aegis_has_debugger() heuristics. +Core,+Fix,+Improvement
 x (C) Make poor's man build more portable between different
       versions of make tool. +Build
 x (B) Change license to BSD-4-clause.

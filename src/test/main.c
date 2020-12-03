@@ -19,16 +19,20 @@
 # include <sys/wait.h>
 #endif
 
-#define TEST_SLEEP_IN_SECS 5
+#define TEST_SLEEP_IN_SECS 1
 
 static FILE *g_test_proc = NULL;
 
 static FILE *gdb(void);
 static FILE *lldb(void);
 
-static void dbg_attach(FILE *gdb, const pid_t pid);
-static void dbg_continue(FILE *gdb);
-static void dbg_next(FILE *gdb);
+static void gdb_attach(FILE *gdb, const pid_t pid);
+static void gdb_continue(FILE *gdb);
+static void gdb_next(FILE *gdb);
+
+static void lldb_attach(FILE *lldb, const pid_t pid);
+static void lldb_continue(FILE *lldb);
+static void lldb_next(FILE *lldb);
 
 static int has_gdb(void);
 static int has_lldb(void);
@@ -52,8 +56,9 @@ CUTE_TEST_CASE_END
 CUTE_TEST_CASE(aegis_has_debugger_tests)
     FILE *gdb_proc = NULL, *lldb_proc = NULL;
     pid_t pid;
-    int ntry = 20;
+    int ntry = 0;
     int run_gdb_tests = 0, run_lldb_tests = 0;
+    int is_running = 0;
     char *wait4debug_binarypath =
 #if defined(__unix__)
         "../../samples/wait4debug";
@@ -72,29 +77,39 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
         CUTE_ASSERT(is_process_running(pid));
         gdb_proc = gdb();
         CUTE_ASSERT(gdb_proc != NULL);
-        dbg_attach(gdb_proc, pid);
-        dbg_continue(gdb_proc);
+        fprintf(gdb_proc, "set print inferior-events off\n");
+        gdb_attach(gdb_proc, pid);
+        gdb_continue(gdb_proc);
 #if defined(__FreeBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
         fclose(gdb_proc);
-        CUTE_ASSERT(!is_process_running(pid));
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
 
         pid = system_nowait(wait4debug_binarypath);
         CUTE_ASSERT(is_process_running(pid));
         gdb_proc = gdb();
         CUTE_ASSERT(gdb_proc != NULL);
+        fprintf(gdb_proc, "set print inferior-events off\n");
         ntry = 10;
-        dbg_attach(gdb_proc, pid);
+        gdb_attach(gdb_proc, pid);
         do {
-            dbg_next(gdb_proc);
+            gdb_next(gdb_proc);
             usleep(2);
         } while (ntry-- > 0);
-        fclose(gdb_proc);
 #if defined(__FreeBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
-        CUTE_ASSERT(!is_process_running(pid));
+        fclose(gdb_proc);
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
     }
 
     // INFO(Rafael): Testing detection with LLDB.
@@ -103,31 +118,39 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
         CUTE_ASSERT(is_process_running(pid));
         lldb_proc = lldb();
         CUTE_ASSERT(lldb_proc != NULL);
-        dbg_attach(lldb_proc, pid);
-        dbg_continue(lldb_proc);
+        lldb_attach(lldb_proc, pid);
+        lldb_continue(lldb_proc);
 #if defined(__FreeBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
         fclose(lldb_proc);
-        CUTE_ASSERT(!is_process_running(pid));
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
 
         pid = system_nowait(wait4debug_binarypath);
         CUTE_ASSERT(is_process_running(pid));
         lldb_proc = lldb();
         CUTE_ASSERT(lldb_proc != NULL);
         ntry = 10;
-        dbg_attach(lldb_proc, pid);
+        lldb_attach(lldb_proc, pid);
         do {
-            dbg_next(lldb_proc);
+            lldb_next(lldb_proc);
             usleep(2);
         } while (ntry-- > 0);
-        fclose(lldb_proc);
 #if defined(__FreeBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
-        CUTE_ASSERT(!is_process_running(pid));
+        fclose(lldb_proc);
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
     }
-
+    sleep(TEST_SLEEP_IN_SECS);
 CUTE_TEST_CASE_END
 
 CUTE_TEST_CASE(aegis_set_gorgon_tests)
@@ -137,20 +160,32 @@ static FILE *gdb(void) {
     return popen("gdb", "w");
 }
 
-static void dbg_attach(FILE *dbg, const pid_t pid) {
-    fprintf(dbg, "attach %d\n", pid);
+static void gdb_attach(FILE *gdb, const pid_t pid) {
+    fprintf(gdb, "attach %d\n", pid);
 }
 
-static void dbg_continue(FILE *dbg) {
-    fprintf(dbg, "continue\n");
+static void gdb_continue(FILE *gdb) {
+    fprintf(gdb, "continue\n");
 }
 
-static void dbg_next(FILE *dbg) {
-    fprintf(dbg, "next\n");
+static void gdb_next(FILE *gdb) {
+    fprintf(gdb, "next\n");
 }
 
 static FILE *lldb(void) {
     return popen("lldb", "w");
+}
+
+static void lldb_attach(FILE *lldb, const pid_t pid) {
+    fprintf(lldb, "attach --pid %d\n", pid);
+}
+
+static void lldb_continue(FILE *lldb) {
+    fprintf(lldb, "continue\n");
+}
+
+static void lldb_next(FILE *lldb) {
+    fprintf(lldb, "next\n");
 }
 
 static int has_gdb(void) {
@@ -185,9 +220,9 @@ static int is_process_running(const pid_t pid) {
     int pidinfo[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PID, (int)pid };
     struct kinfo_proc kp;
     size_t kp_len = sizeof(kp);
-    int is = 1;
-    if (sysctl(pidinfo, nitems(pidinfo), &kp, &kp_len, NULL, 0) == 0) {
-        is = (kp.ki_stat != SZOMB && kp.ki_stat != SSLEEP /*&& kp.ki_stat != SLOCK*/);
+    int is = (sysctl(pidinfo, nitems(pidinfo), &kp, &kp_len, NULL, 0) == 0);
+    if (is) {
+        is = (kp.ki_stat == SRUN && (kp.ki_flag & P_TRACED) == 0);
     }
     return is;
 #else
