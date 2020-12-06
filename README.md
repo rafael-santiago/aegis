@@ -132,7 +132,7 @@ of worrying about none of it. Because your front door is wide open or you do not
 
 ### Debugging detection
 
-In some bug hunting cases is useful to wait for debug before continuing the program execution. Specially concurrent stuff or
+In some bug hunting cases is useful to wait for debugger before continuing the program execution. Specially concurrent stuff or
 even event oriented processing. In this case you can use ``aegis_has_debugger()`` function.
 
 This function returns 1 when a debugger has being attached otherwise 0.
