@@ -226,7 +226,7 @@ black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 Certain programs require some debugging avoidance. ``Aegis`` features a nice and straightforward way to implement this kind
 of mitigation. For doing that you need:
 
-- To implement a exit checking function with the prototype: ``int(void *)``.
+- To implement a exit checking function with the prototype: ``int(void *)``. A return different from zero means that gorgon should exit.
 - To call ``aegis_set_gorgon()`` passing your exit checking function and its argument pointer.
 
 Take a look at the following code to get more details about:
