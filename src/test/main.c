@@ -17,6 +17,13 @@
 # include <sys/sysctl.h>
 # include <unistd.h>
 # include <sys/wait.h>
+#elif defined(__NetBSD__)
+# include <sys/types.h>
+# include <sys/proc.h>
+# include <kvm.h>
+# include <sys/sysctl.h>
+# include <unistd.h>
+# include <sys/wait.h>
 #endif
 
 #define TEST_SLEEP_IN_SECS 1
@@ -80,7 +87,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
         fprintf(gdb_proc, "set print inferior-events off\n");
         gdb_attach(gdb_proc, pid);
         gdb_continue(gdb_proc);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
         fclose(gdb_proc);
@@ -101,7 +108,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
             gdb_next(gdb_proc);
             usleep(2);
         } while (ntry-- > 0);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
         fclose(gdb_proc);
@@ -120,7 +127,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
         CUTE_ASSERT(lldb_proc != NULL);
         lldb_attach(lldb_proc, pid);
         lldb_continue(lldb_proc);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
         fclose(lldb_proc);
@@ -140,7 +147,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
             lldb_next(lldb_proc);
             usleep(2);
         } while (ntry-- > 0);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
         fclose(lldb_proc);
@@ -223,6 +230,17 @@ static int is_process_running(const pid_t pid) {
     int is = (sysctl(pidinfo, nitems(pidinfo), &kp, &kp_len, NULL, 0) == 0);
     if (is) {
         is = (kp.ki_stat == SRUN && (kp.ki_flag & P_TRACED) == 0);
+    }
+    return is;
+#elif defined(__NetBSD__)
+    struct kinfo_proc2 kp;
+    size_t kp_len = sizeof(kp);
+    int pidinfo[6] = { CTL_KERN, KERN_PROC2, KERN_PROC_PID, (int)pid,
+                       sizeof(kp), 1 };
+    int is = (sysctl(pidinfo, __arraycount(pidinfo), &kp, &kp_len,
+                     NULL, 0) == 0);
+    if (is) {
+        is = (kp.p_stat == LSRUN && (kp.p_flag & P_TRACED) == 0);
     }
     return is;
 #else

@@ -32,6 +32,8 @@ setgorgon.prologue() {
         $ldflags.add_item("-lpthread");
     } else if (hefesto.sys.os_name() == "freebsd") {
         $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "netbsd") {
+        $ldflags.add_item("-lpthread");
     }
 }
 
