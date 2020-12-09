@@ -267,21 +267,21 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
     //               If you are not a brazilian programmer maybe you will never understand the
     //               reason of the pun with ('bacalhau' + 'puffy') = 'bacalhuffy'.
     const char *bacalhuffy_sh = "rm out.txt > /dev/null 2>&1\n"
-                                "../../../samples/wait4debug > out.txt &\n"
-                                "sleep 5"
+                                "../../samples/wait4debug > out.txt &\n"
+                                "sleep 5\n"
                                 "pid=$(cat out.txt | tail -n 1 | cut -d '=' -f 2,7 | cut -d ')' -f 1)\n"
                                 "echo \"attach ${pid}\" > .gdbinit\n"
                                 "echo \"continue\" >> .gdbinit\n"
                                 "echo \"quit\" >> .gdbinit\n"
                                 "gdb > /dev/null 2>&1\n"
                                 "rm .gdbinit out.txt\n"
-                                "$(ps -p ${pid} > /dev/null 2>&1\n"
-                                "if [ $? -eq 0 ] ; then\n"
-                                "       echo \"OpenBSD Bacalhuffy info: program has exited.\n"
+                                "ps -p ${pid} > /dev/null 2>&1\n"
+                                "if [ $? -ne 0 ] ; then\n"
+                                "       echo \"OpenBSD Bacalhuffy info: program has exited.\"\n"
                                 "       exit 0\n"
                                 "else\n"
-                                "       kill ${pid}\n"
-                                "       echo \"OpenBSD Bacalhuffy error: program is still running.\n"
+                                "       kill -9 ${pid}\n"
+                                "       echo \"OpenBSD Bacalhuffy error: program is still running.\"\n"
                                 "       exit 1\n"
                                 "fi\n";
     FILE *fp;
@@ -295,10 +295,10 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
     CUTE_ASSERT(system("chmod +x .bacalhuffy.sh") == 0);
     do {
         exit_code = system("./.bacalhuffy.sh");
-        if (exit_code != 0) {
+        if (exit_code != 0 && ntry > 1) {
             sleep(TEST_SLEEP_IN_SECS);
         }
-    } while (ntry-- > 0 && exit_code != 0);
+    } while (ntry-- > 1 && exit_code != 0);
     remove(".bacalhuffy.sh");
     CUTE_ASSERT(exit_code == 0);
 CUTE_TEST_CASE_END

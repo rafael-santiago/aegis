@@ -1,5 +1,5 @@
-(A) Implement debugger detector for OpenBSD. +Core
 (A) Wrapper debugger detector for Windows. +Core
+x (A) Implement debugger detector for OpenBSD. +Core
 x (A) Implement debugger detector for NetBSD. +Core
 x (B) Make a distribution build task. +Build
 x (A) Make FreeBSD tests more stable. +Test
