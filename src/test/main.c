@@ -28,6 +28,8 @@
 
 #define TEST_SLEEP_IN_SECS 1
 
+#if !defined(__OpenBSD__)
+
 static FILE *g_test_proc = NULL;
 
 static FILE *gdb(void);
@@ -41,12 +43,14 @@ static void lldb_attach(FILE *lldb, const pid_t pid);
 static void lldb_continue(FILE *lldb);
 static void lldb_next(FILE *lldb);
 
-static int has_gdb(void);
-static int has_lldb(void);
-
 static int is_process_running(const pid_t pid);
 
 static pid_t system_nowait(const char *command);
+
+#endif
+
+static int has_gdb(void);
+static int has_lldb(void);
 
 CUTE_DECLARE_TEST_CASE(aegis_tests);
 
@@ -59,6 +63,8 @@ CUTE_TEST_CASE(aegis_tests)
     CUTE_RUN_TEST(aegis_has_debugger_tests);
     CUTE_RUN_TEST(aegis_set_gorgon_tests);
 CUTE_TEST_CASE_END
+
+#if !defined(__OpenBSD__)
 
 CUTE_TEST_CASE(aegis_has_debugger_tests)
     FILE *gdb_proc = NULL, *lldb_proc = NULL;
@@ -195,14 +201,6 @@ static void lldb_next(FILE *lldb) {
     fprintf(lldb, "next\n");
 }
 
-static int has_gdb(void) {
-    return (system("gdb --version > /dev/null 2>&1") == 0);
-}
-
-static int has_lldb(void) {
-    return (system("lldb --version > /dev/null 2>&1") == 0);
-}
-
 static int is_process_running(const pid_t pid) {
 #if defined(__linux__)
     char proc_buf[1024], *bp, *bp_end;
@@ -256,4 +254,64 @@ static pid_t system_nowait(const char *command) {
         exit(1);
     }
     return pid;
+}
+
+#elif defined(__OpenBSD__)
+
+CUTE_TEST_CASE(aegis_has_debugger_tests)
+    // WARN(Rafael): On OpenBSD all fork stuff done on Linux, FreeBSD and NetBSD looks really messy.
+    //               In order to defeat this specific system complication let's combat it with simplicity.
+    //               This is ugly but works. Better: without sucking anything that already works well
+    //               on other systems. Until now let's stick with it for OpenBSD.
+    //
+    //               If you are not a brazilian programmer maybe you will never understand the
+    //               reason of the pun with ('bacalhau' + 'puffy') = 'bacalhuffy'.
+    const char *bacalhuffy_sh = "rm out.txt > /dev/null 2>&1\n"
+                                "../../../samples/wait4debug > out.txt &\n"
+                                "sleep 5"
+                                "pid=$(cat out.txt | tail -n 1 | cut -d '=' -f 2,7 | cut -d ')' -f 1)\n"
+                                "echo \"attach ${pid}\" > .gdbinit\n"
+                                "echo \"continue\" >> .gdbinit\n"
+                                "echo \"quit\" >> .gdbinit\n"
+                                "gdb > /dev/null 2>&1\n"
+                                "rm .gdbinit out.txt\n"
+                                "$(ps -p ${pid} > /dev/null 2>&1\n"
+                                "if [ $? -eq 0 ] ; then\n"
+                                "       echo \"OpenBSD Bacalhuffy info: program has exited.\n"
+                                "       exit 0\n"
+                                "else\n"
+                                "       kill ${pid}\n"
+                                "       echo \"OpenBSD Bacalhuffy error: program is still running.\n"
+                                "       exit 1\n"
+                                "fi\n";
+    FILE *fp;
+    int ntry = 20;
+    int exit_code;
+    CUTE_ASSERT(has_gdb());
+    fp = fopen(".bacalhuffy.sh", "w");
+    CUTE_ASSERT(fp != NULL);
+    fprintf(fp, "%s", bacalhuffy_sh);
+    fclose(fp);
+    CUTE_ASSERT(system("chmod +x .bacalhuffy.sh") == 0);
+    do {
+        exit_code = system("./.bacalhuffy.sh");
+        if (exit_code != 0) {
+            sleep(TEST_SLEEP_IN_SECS);
+        }
+    } while (ntry-- > 0 && exit_code != 0);
+    remove(".bacalhuffy.sh");
+    CUTE_ASSERT(exit_code == 0);
+CUTE_TEST_CASE_END
+
+CUTE_TEST_CASE(aegis_set_gorgon_tests)
+CUTE_TEST_CASE_END
+
+#endif
+
+static int has_gdb(void) {
+    return (system("gdb --version > /dev/null 2>&1") == 0);
+}
+
+static int has_lldb(void) {
+    return (system("lldb --version > /dev/null 2>&1") == 0);
 }
