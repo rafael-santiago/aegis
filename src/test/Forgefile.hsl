@@ -30,6 +30,14 @@ aegis-tests.prologue() {
     $libraries = hefesto.sys.get_option("libraries");
     $ldflags = hefesto.sys.get_option("ldflags");
     $appname = "aegis-tests";
+    if (hefesto.sys.os_name() != "windows") {
+        if (isdir("/usr/local/include")) {
+            $includes.add_item("/usr/local/include");
+        }
+        if (isdir("/usr/local/lib")) {
+            $libraries.add_item("/usr/local/lib");
+        }
+    }
     if (hefesto.sys.os_name() == "linux") {
         $ldflags.add_item("-ldl");
         $ldflags.add_item("-lpthread");
