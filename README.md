@@ -227,11 +227,19 @@ Certain programs require some debugging avoidance. ``Aegis`` features a nice and
 of mitigation. For doing that you need:
 
 - To implement a exit checking function with the prototype: ``int(void *)``. A return different from zero means that gorgon should exit.
-- To call ``aegis_set_gorgon()`` passing your exit checking function and its argument pointer.
+- If necessary to implement a on debugger function with the prototype: ``void(void *)``. This function will be called when a debugger is detected.
+- To call ``aegis_set_gorgon()`` passing your exit checking function and its argument pointer, besides on debugger function and its argument pointer.
 
 Take a look at the following code to get more details about:
 
 ```c
+/*
+ * Copyright (c) 2020, Rafael Santiago
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 #include <aegis.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -251,7 +259,7 @@ int disable_gorgon(void *args) {
 int main(int argc, char **argv) {
     signal(SIGINT, sigint_watchdog);
     signal(SIGTERM, sigint_watchdog);
-    if (aegis_set_gorgon(disable_gorgon, &bye) != 0) {
+    if (aegis_set_gorgon(disable_gorgon, &bye, NULL, NULL) != 0) {
         fprintf(stderr, "error: unable to set gorgon.\n");
         exit(1);
     }
@@ -269,6 +277,11 @@ int main(int argc, char **argv) {
 ```
 
 You can find the presented code into ``src/samples/setgorgon.c``.
+
+Notice that on debugger function was passed as ``NULL``. It asks ``aegis`` to use its default on debugger function. This
+default callback is only about calling ``exit(1)``. Thus, after a debugger detection, the process will immediately exit.
+There are some cases that you need to do something before exiting, for those cases on debugger function would be handy.
+Anyway, once a debugger attached, the best action is terminate the process as soon as possible or try to kill the debugger.
 
 [``Back``](#contents)
 
