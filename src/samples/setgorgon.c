@@ -24,7 +24,7 @@ int disable_gorgon(void *args) {
 int main(int argc, char **argv) {
     signal(SIGINT, sigint_watchdog);
     signal(SIGTERM, sigint_watchdog);
-    if (aegis_set_gorgon(disable_gorgon, &bye) != 0) {
+    if (aegis_set_gorgon(disable_gorgon, &bye, NULL, NULL) != 0) {
         fprintf(stderr, "error: unable to set gorgon.\n");
         exit(1);
     }

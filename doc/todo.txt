@@ -1,4 +1,5 @@
 (A) Wrapper debugger detector for Windows. +Core
+x (A) Improve cross platform code organizing. Redundant code avoidance. +SoftwareEngineering,+Build,+Improvement
 x (A) Implement debugger detector for OpenBSD. +Core
 x (A) Implement debugger detector for NetBSD. +Core
 x (B) Make a distribution build task. +Build

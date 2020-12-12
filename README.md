@@ -43,7 +43,7 @@ Makefile.
 The easiest way is:
 
 ```
-black-beard@QueenAnneRevenge:~/src# git clone https://github.com/rafael-santiago/aegis --recursive
+black-beard@QueensAnneRevenge:~/src# git clone https://github.com/rafael-santiago/aegis --recursive
 black-beard@QueensAnneRevenge:~/src/aegis/src# _
 ```
 

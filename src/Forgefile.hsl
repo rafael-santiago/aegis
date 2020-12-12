@@ -37,6 +37,15 @@ libaegis.prologue() {
         $deps = get_c_cpp_deps();
         $srcs.ls(".*\\.c$");
         hefesto.sys.cd("..");
+    } else {
+        hefesto.sys.echo("ERROR: Unable to find native implementation file for " + $platform + ".\n");
+        hefesto.project.abort(1);
+    }
+    if ($platform == "linux" || $platform == "freebsd" || $platform == "netbsd" || $platform == "openbsd") {
+        # INFO(Rafael): Posix thread compliant platforms.
+        hefesto.sys.cd("pthread");
+        $srcs.ls(".*\\.c$");
+        hefesto.sys.cd("..");
     }
     $includes = hefesto.sys.get_option("includes");
     $cflags = hefesto.sys.get_option("cflags");

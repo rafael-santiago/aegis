@@ -15,16 +15,6 @@
 #include <sys/wait.h>
 #include <pthread.h>
 
-struct aegis_set_gorgon_exec_ctx {
-    pthread_t thread;
-    aegis_gorgon_exit_func should_exit;
-    void *args;
-};
-
-static struct aegis_set_gorgon_exec_ctx g_aegis_gorgon = { 0, NULL, NULL };
-
-static void *aegis_gorgon_routine(void *args);
-
 int aegis_has_debugger(void) {
     pid_t pid = getpid(), cpid;
     struct kinfo_proc kp;
@@ -41,37 +31,4 @@ int aegis_has_debugger(void) {
         waitpid(cpid, &is, 0);
     }
     return is;
-}
-
-int aegis_set_gorgon(aegis_gorgon_exit_func func, void *args) {
-    int err;
-    pthread_attr_t gorgon_attr;
-
-    if ((err = pthread_attr_init(&gorgon_attr)) == 0) {
-        g_aegis_gorgon.should_exit = func;
-        g_aegis_gorgon.args = args;
-        err = pthread_create(&g_aegis_gorgon.thread, &gorgon_attr,
-                             aegis_gorgon_routine, &g_aegis_gorgon);
-    }
-
-    return err;
-}
-
-static void *aegis_gorgon_routine(void *args) {
-    int stop = 0;
-    struct aegis_set_gorgon_exec_ctx *gorgon = (struct aegis_set_gorgon_exec_ctx *)args;
-    aegis_gorgon_exit_func should_exit = gorgon->should_exit;
-    void *exit_args = gorgon->args;
-
-    while (!stop) {
-        if (aegis_has_debugger()) {
-            exit(1);
-        }
-        if (should_exit != NULL) {
-            stop = should_exit(exit_args);
-        }
-        usleep(1);
-    }
-
-    return NULL;
 }
