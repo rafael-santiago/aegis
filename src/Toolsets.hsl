@@ -41,11 +41,23 @@ function get_app_toolset() : result type string {
 }
 
 local function has_gcc() : result type int {
-    result (hefesto.sys.run("gcc --version > /dev/null 2>&1") == 0);
+	var cmdline type string;
+	if (hefesto.sys.os_name() != "windows") {
+		$cmdline = "gcc --version > /dev/null 2>&1";
+	} else {
+		$cmdline = "gcc --version > nul 2>&1";
+	}
+    result (hefesto.sys.run($cmdline) == 0);
 }
 
 local function has_clang() : result type int {
-    result (hefesto.sys.run("clang --version > /dev/null 2>&1") == 0);
+	var cmdline type string;
+	if (hefesto.sys.os_name() != "windows") {
+		$cmdline = "clang --version > /dev/null 2>&1";
+	} else {
+		$cmdline = "clang --version > nul 2>&1";
+	}
+    result (hefesto.sys.run($cmdline) == 0);
 }
 
 function build(libname type string) : result type none {

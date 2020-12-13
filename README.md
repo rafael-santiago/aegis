@@ -1,7 +1,8 @@
 ![Medusa by Caravaggio (1571-1610) / Public Domain](https://github.com/rafael-santiago/aegis/blob/master/etc/aegis_logo.png "Medusa by Caravaggio (1571-1610) / Public Domain")
 #
 
-``Aegis`` is a library that allows you detect if your software is being debugged or not on ``Linux``, ``FreeBSD``, ``NetBSD`` and ``OpenBSD``.
+``Aegis`` is a library that allows you detect if your software is being debugged or not on ``Linux``, ``FreeBSD``, ``NetBSD``, ``OpenBSD`` and
+``Windows``.
 
 The name is about a lousy acronym: **A**n **E**LF's -**g** **i**nspection **s**ignalling. If you are hooked on
 Greek mithology you should know that ``Aegis`` is the name of the shield gave by ``Athena`` to ``Perseus`` to help him

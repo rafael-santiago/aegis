@@ -24,6 +24,8 @@
 # include <sys/sysctl.h>
 # include <unistd.h>
 # include <sys/wait.h>
+#elif defined(_WIN32)
+# include <windows.h>
 #endif
 
 #define TEST_SLEEP_IN_SECS 1
@@ -64,6 +66,20 @@ CUTE_TEST_CASE(aegis_tests)
     CUTE_RUN_TEST(aegis_set_gorgon_tests);
 CUTE_TEST_CASE_END
 
+#if defined(_WIN32)
+
+#define SIGKILL 9
+
+void kill(pid_t pid, int dummy) {
+	HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	if (proc != NULL) {
+		TerminateProcess(proc, 0);
+		CloseHandle(proc);
+	}
+	
+}
+#endif
+
 #if !defined(__OpenBSD__)
 
 CUTE_TEST_CASE(aegis_has_debugger_tests)
@@ -96,7 +112,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 #if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
-        fclose(gdb_proc);
+        pclose(gdb_proc);
         is_running = is_process_running(pid);
         if (is_running) {
             kill(pid, SIGKILL);
@@ -117,7 +133,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 #if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
-        fclose(gdb_proc);
+        pclose(gdb_proc);
         is_running = is_process_running(pid);
         if (is_running) {
             kill(pid, SIGKILL);
@@ -136,7 +152,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 #if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
-        fclose(lldb_proc);
+        pclose(lldb_proc);
         is_running = is_process_running(pid);
         if (is_running) {
             kill(pid, SIGKILL);
@@ -156,7 +172,7 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 #if defined(__FreeBSD__) || defined(__NetBSD__)
         sleep(TEST_SLEEP_IN_SECS);
 #endif
-        fclose(lldb_proc);
+        pclose(lldb_proc);
         is_running = is_process_running(pid);
         if (is_running) {
             kill(pid, SIGKILL);
@@ -241,12 +257,23 @@ static int is_process_running(const pid_t pid) {
         is = (kp.p_stat == LSRUN && (kp.p_flag & P_TRACED) == 0);
     }
     return is;
+#elif defined(_WIN32)
+	HANDLE proc = OpenProcess(SYNCHRONIZE, FALSE, pid);
+	int is = (proc != NULL);
+	DWORD retval;
+	if (is) {
+		retval = WaitForSingleObject(proc, 0);
+		is = (retval == WAIT_TIMEOUT);
+		CloseHandle(proc);
+	}
+	return is;
 #else
 # Some code wanted.
 #endif
 }
 
 static pid_t system_nowait(const char *command) {
+#if defined(__unix__)
     pid_t pid;
     pid = fork();
     if (pid == 0) {
@@ -254,6 +281,15 @@ static pid_t system_nowait(const char *command) {
         exit(1);
     }
     return pid;
+#else
+	pid_t pid = 0;
+	STARTUPINFO si = { 0 };
+	PROCESS_INFORMATION pi =  { 0 };	
+	if (CreateProcess(command, NULL, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &pi) != FALSE) {
+		pid = pi.dwProcessId;
+	}
+	return pid;
+#endif
 }
 
 #elif defined(__OpenBSD__)
@@ -309,9 +345,21 @@ CUTE_TEST_CASE_END
 #endif
 
 static int has_gdb(void) {
+#if defined(__unix__)
     return (system("gdb --version > /dev/null 2>&1") == 0);
+#elif defined(_WIN32)
+	return (system("gdb --version > nul 2>&1") == 0);
+#else
+# error Some code wanted.
+#endif
 }
 
 static int has_lldb(void) {
+#if defined(__unix__)
     return (system("lldb --version > /dev/null 2>&1") == 0);
+#elif defined(_WIN32)
+	return (system("lldb --version > nul 2>&1") == 0);
+#else
+# error Some code wanted.
+#endif
 }
