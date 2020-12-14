@@ -1,3 +1,5 @@
+(A) Implement aegis_set_gorgon() tests. +Core,+Test
+x (A) Scan dependencies correctly. +Build
 x (A) Create a version label macro at 'aegis.h'. +Core,+Deploy
 x (A) Create 'RELNOTES.txt'. +Deploy
 x (A) Debugger detector for Windows (wrapper). +Core

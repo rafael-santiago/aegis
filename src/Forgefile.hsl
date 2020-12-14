@@ -34,8 +34,8 @@ libaegis.prologue() {
     var platform type string;
     $platform = hefesto.sys.os_name();
     if (hefesto.sys.cd($platform)) {
-        $deps = get_c_cpp_deps();
         $srcs.ls(".*\\.c$");
+        $deps = get_c_cpp_deps();
         hefesto.sys.cd("..");
     } else {
         hefesto.sys.echo("ERROR: Unable to find native implementation file for " + $platform + ".\n");
@@ -45,6 +45,7 @@ libaegis.prologue() {
         # INFO(Rafael): Posix thread compliant platforms.
         hefesto.sys.cd("pthread");
         $srcs.ls(".*\\.c$");
+        $deps = $deps + get_c_cpp_deps();
         hefesto.sys.cd("..");
     }
     $includes = hefesto.sys.get_option("includes");
