@@ -1,0 +1,16 @@
+1. Latest releases are on the top.
+2. Usually, I try to do my best in order to bring you 'RELNOTES' instead of notes from hell ;)
+
+    Rafael
+--
+v1 [git-tag: 'v1']
+
+    Features:
+
+        - General debugger detection function: aegis_has_debugger().
+        - Debugging avoidance function: aegis_set_gorgon().
+        - Supported platforms: Linux, FreeBSD, NetBSD, OpenBSD and Windows.
+
+    Bugfixes:
+
+        - None!

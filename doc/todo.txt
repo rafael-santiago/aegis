@@ -1,3 +1,5 @@
+x (A) Create a version label macro at 'aegis.h'. +Core,+Deploy
+x (A) Create 'RELNOTES.txt'. +Deploy
 x (A) Debugger detector for Windows (wrapper). +Core
 x (A) Improve cross platform code organizing. Redundant code avoidance. +SoftwareEngineering,+Build,+Improvement
 x (A) Implement debugger detector for OpenBSD. +Core

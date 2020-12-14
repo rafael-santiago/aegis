@@ -8,6 +8,8 @@
 #ifndef AEGIS_H
 #define AEGIS_H 1
 
+#define AEGIS_VERSION "v1"
+
 typedef int (*aegis_gorgon_exit_test_func)(void *args);
 typedef void (*aegis_gorgon_on_debugger_func)(void *args);
 
