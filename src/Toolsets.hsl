@@ -132,8 +132,9 @@ local function build_dist() : result type none {
     $oldcwd = hefesto.sys.pwd();
 
     hefesto.sys.cd("..");
+
     if (isdir("include") == 1) {
-        var old_headers type list;
+	    var old_headers type list;
         hefesto.sys.cd("include");
         $old_headers.ls(".*\\.h$");
         var o type int;
@@ -144,7 +145,7 @@ local function build_dist() : result type none {
         }
         hefesto.sys.cd("..");
     } else {
-        hefesto.sys.mkdir("include");
+		hefesto.sys.mkdir("include");
     }
 
     var h type int;
@@ -158,16 +159,9 @@ local function build_dist() : result type none {
 
     var distpkg_error type int;
     var distpkg_name_path type string;
-    hefesto.sys.rm($distpkg_name_path);
     $distpkg_name_path = "lib/libaegis-" + hefesto.sys.os_name() + ".zip";
-    var zip_command type string;
-    $zip_command = "zip " + $distpkg_name_path + " lib/*.a include/*.h";
-    if (hefesto.sys.os_name() != "windows") {
-        $zip_command = $zip_command + " > /dev/null 2>&1";
-    } else {
-        $zip_command = $zip_command + " > nul 2>&1";
-    }
-    $distpkg_error = hefesto.sys.run($zip_command);
+
+    $distpkg_error = mkdist($distpkg_name_path);
 
     hefesto.sys.cd("include");
     $o = 0;
@@ -196,7 +190,18 @@ local function has_zip() : result type int {
     if (hefesto.sys.os_name() != "windows") {
         $exit_code = hefesto.sys.run("zip --version > /dev/null 2>&1");
     } else {
-        $exit_code = hefesto.sys.run("zip --version > nul 2>&1");
+        $exit_code = hefesto.sys.run("7z.exe > nul 2>&1");
     }
     result ($exit_code == 0);
+}
+
+local function mkdist(distpkg_name_path type string) : result type int {
+    hefesto.sys.rm($distpkg_name_path);
+	var zip_command type string;
+    if (hefesto.sys.os_name() != "windows") {
+        $zip_command = "zip " + $distpkg_name_path + " lib/*.a include/*.h > /dev/null 2>&1";
+    } else {
+        $zip_command = "7z.exe a -tzip " + $distpkg_name_path + " lib\\*.a include\\*.h > nul 2>&1";
+    }
+    result hefesto.sys.run($zip_command);
 }
