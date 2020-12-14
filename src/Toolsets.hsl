@@ -114,7 +114,11 @@ local function build_test() : result type none {
 
 local function build_dist() : result type none {
     if (has_zip() == 0) {
-        hefesto.sys.echo("ERROR: Unable to make Aegis' distribution package. Your system does not have zip tool.\n");
+        if (hefesto.sys.os_name() != "windows") {
+            hefesto.sys.echo("ERROR: Unable to make Aegis' distribution package. Your system does not have zip tool.\n");
+        } else {
+            hefesto.sys.echo("ERROR: Unable to make Aegis' distribution package. Your system does not have 7z tool.\n");
+        }
         hefesto.project.abort(1);
     }
 
@@ -134,7 +138,7 @@ local function build_dist() : result type none {
     hefesto.sys.cd("..");
 
     if (isdir("include") == 1) {
-	    var old_headers type list;
+        var old_headers type list;
         hefesto.sys.cd("include");
         $old_headers.ls(".*\\.h$");
         var o type int;
@@ -145,7 +149,7 @@ local function build_dist() : result type none {
         }
         hefesto.sys.cd("..");
     } else {
-		hefesto.sys.mkdir("include");
+        hefesto.sys.mkdir("include");
     }
 
     var h type int;
@@ -197,7 +201,7 @@ local function has_zip() : result type int {
 
 local function mkdist(distpkg_name_path type string) : result type int {
     hefesto.sys.rm($distpkg_name_path);
-	var zip_command type string;
+    var zip_command type string;
     if (hefesto.sys.os_name() != "windows") {
         $zip_command = "zip " + $distpkg_name_path + " lib/*.a include/*.h > /dev/null 2>&1";
     } else {
