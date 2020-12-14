@@ -265,7 +265,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    fprintf(stdout, "info: the proces id is %d.\n", getpid());
+    fprintf(stdout, "info: proces started (pid=%d)...\n", getpid());
     fprintf(stdout, "info: press ctrl + c to exit sample or attach a debugger.\n");
     while (!bye) {
         usleep(2);
@@ -292,7 +292,7 @@ On a terminal run ``setgorgon``
 
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
-info: the process id is 28582
+info: process started (pid=28582)...
 info: press ctrl + c to exit sample or attach a debugger.
 ```
 
@@ -300,7 +300,7 @@ Now let's only press ``ctrl + c``:
 
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
-info: the process id is 28582.
+info: process started (pid=28582)...
 info: press ctrl + c to exit sample or attach a debugger.
 ^C
 info: gracefully exiting, no debugger was detected.
@@ -311,7 +311,7 @@ Nice but what about give debugging a try? Let's run it again:
 
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
-info: the process id is 14753.
+info: process started (pid=14753)...
 info: press ctrl + c to exit sample or attach a debugger.
 ```
 
@@ -339,7 +339,7 @@ No chance for our debugging attempt, let's go back to our setgorgon's terminal:
 
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
-info: the process id is 14753.
+info: process started (pid=14753)...
 info: press ctrl + c to exit sample or attach a debugger.
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 ```

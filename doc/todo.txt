@@ -1,4 +1,4 @@
-(A) Implement aegis_set_gorgon() tests. +Core,+Test
+x (A) Implement aegis_set_gorgon() tests. +Core,+Test
 x (A) Tidy up native codes infrastructure. +Core,+Improvement,+Housekeeping
 x (A) Scan dependencies correctly. +Build
 x (A) Create a version label macro at 'aegis.h'. +Core,+Deploy

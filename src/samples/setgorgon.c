@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    fprintf(stdout, "info: the proces id is %d.\n", getpid());
+    fprintf(stdout, "info: proces started (pid=%d)...\n", getpid());
     fprintf(stdout, "info: press ctrl + c to exit sample or attach a debugger.\n");
     while (!bye) {
         usleep(2);

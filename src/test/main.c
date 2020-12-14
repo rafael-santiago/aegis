@@ -182,6 +182,99 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 CUTE_TEST_CASE_END
 
 CUTE_TEST_CASE(aegis_set_gorgon_tests)
+#if defined(__unix__)
+    const char *setgorgon = "../../samples/setgorgon";
+#elif defined(_WIN32)
+    const char *setgorgon = "../../samples/setgorgon.exe";
+#else
+# error Some code wanted.
+#endif
+    pid_t pid;
+    FILE *gdb_proc = NULL, *lldb_proc = NULL;
+    int run_gdb_tests, run_lldb_tests;
+    int is_running;
+    int ntry;
+
+    run_gdb_tests = has_gdb();
+    run_lldb_tests = has_lldb();
+
+    CUTE_ASSERT(run_gdb_tests || run_lldb_tests);
+
+    if (run_gdb_tests) {
+        pid = system_nowait(setgorgon);
+        CUTE_ASSERT(is_process_running(pid));
+        gdb_proc = gdb();
+        CUTE_ASSERT(gdb_proc != NULL);
+        gdb_attach(gdb_proc, pid);
+        gdb_continue(gdb_proc);
+#if defined(__FreeBSD__) || defined(__NetBSD__)
+        sleep(TEST_SLEEP_IN_SECS);
+#endif
+        pclose(gdb_proc);
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
+
+        pid = system_nowait(setgorgon);
+        CUTE_ASSERT(is_process_running(pid));
+        gdb_proc = gdb();
+        CUTE_ASSERT(gdb_proc != NULL);
+        gdb_attach(gdb_proc, pid);
+        ntry = 10;
+        do {
+            gdb_next(gdb_proc);
+            usleep(2);
+        } while (ntry -- > 0);
+#if defined(__FreeBSD__) || defined(__NetBSD__)
+        sleep(TEST_SLEEP_IN_SECS);
+#endif
+        pclose(gdb_proc);
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
+    }
+
+    if (run_lldb_tests) {
+        pid = system_nowait(setgorgon);
+        CUTE_ASSERT(is_process_running(pid));
+        lldb_proc = lldb();
+        CUTE_ASSERT(lldb_proc != NULL);
+        lldb_attach(lldb_proc, pid);
+        lldb_continue(lldb_proc);
+#if defined(__FreeBSD__) || defined(__NetBSD__)
+        sleep(TEST_SLEEP_IN_SECS);
+#endif
+        pclose(lldb_proc);
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
+
+        pid = system_nowait(setgorgon);
+        CUTE_ASSERT(is_process_running(pid));
+        lldb_proc = lldb();
+        CUTE_ASSERT(lldb_proc != NULL);
+        lldb_attach(lldb_proc, pid);
+        ntry = 10;
+        do {
+            lldb_next(lldb_proc);
+            usleep(2);
+        } while (ntry -- > 0);
+#if defined(__FreeBSD__) || defined(__NetBSD__)
+        sleep(TEST_SLEEP_IN_SECS);
+#endif
+        pclose(lldb_proc);
+        is_running = is_process_running(pid);
+        if (is_running) {
+            kill(pid, SIGKILL);
+        }
+        CUTE_ASSERT(!is_running);
+    }
 CUTE_TEST_CASE_END
 
 static FILE *gdb(void) {
@@ -339,6 +432,48 @@ CUTE_TEST_CASE(aegis_has_debugger_tests)
 CUTE_TEST_CASE_END
 
 CUTE_TEST_CASE(aegis_set_gorgon_tests)
+    // WARN(Rafael): On OpenBSD all fork stuff done on Linux, FreeBSD and NetBSD looks really messy.
+    //               In order to defeat this specific system complication let's combat it with simplicity.
+    //               This is ugly but works. Better: without sucking anything that already works well
+    //               on other systems. Until now let's stick with it for OpenBSD.
+    //
+    //               If you are not a brazilian programmer maybe you will never understand the
+    //               reason of the pun with ('bacalhau' + 'puffy') = 'bacalhuffy'.
+    const char *bacalhuffy_sh = "rm out.txt > /dev/null 2>&1\n"
+                                "../../samples/setgorgon > out.txt &\n"
+                                "sleep 5\n"
+                                "pid=$(cat out.txt | tail -n 1 | cut -d '=' -f 2,7 | cut -d ')' -f 1)\n"
+                                "echo \"attach ${pid}\" > .gdbinit\n"
+                                "echo \"continue\" >> .gdbinit\n"
+                                "echo \"quit\" >> .gdbinit\n"
+                                "gdb > /dev/null 2>&1\n"
+                                "rm .gdbinit out.txt\n"
+                                "ps -p ${pid} > /dev/null 2>&1\n"
+                                "if [ $? -ne 0 ] ; then\n"
+                                "       echo \"OpenBSD Bacalhuffy info: program has exited.\"\n"
+                                "       exit 0\n"
+                                "else\n"
+                                "       kill -9 ${pid}\n"
+                                "       echo \"OpenBSD Bacalhuffy error: program is still running.\"\n"
+                                "       exit 1\n"
+                                "fi\n";
+    FILE *fp;
+    int ntry = 20;
+    int exit_code;
+    CUTE_ASSERT(has_gdb());
+    fp = fopen(".bacalhuffy.sh", "w");
+    CUTE_ASSERT(fp != NULL);
+    fprintf(fp, "%s", bacalhuffy_sh);
+    fclose(fp);
+    CUTE_ASSERT(system("chmod +x .bacalhuffy.sh") == 0);
+    do {
+        exit_code = system("./.bacalhuffy.sh");
+        if (exit_code != 0 && ntry > 1) {
+            sleep(TEST_SLEEP_IN_SECS);
+        }
+    } while (ntry-- > 1 && exit_code != 0);
+    remove(".bacalhuffy.sh");
+    CUTE_ASSERT(exit_code == 0);
 CUTE_TEST_CASE_END
 
 #endif
