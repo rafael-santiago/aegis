@@ -257,16 +257,20 @@ int disable_gorgon(void *args) {
     return (*(int *)args);
 }
 
+void on_debugger(void *args) {
+    fprintf(stdout, "\ninfo: debugger detected.\n");
+    exit(1);
+}
+
 int main(int argc, char **argv) {
     signal(SIGINT, sigint_watchdog);
     signal(SIGTERM, sigint_watchdog);
-    if (aegis_set_gorgon(disable_gorgon, &bye, NULL, NULL) != 0) {
+    if (aegis_set_gorgon(disable_gorgon, &bye, on_debugger, NULL) != 0) {
         fprintf(stderr, "error: unable to set gorgon.\n");
         exit(1);
     }
 
-    fprintf(stdout, "info: proces started (pid=%d)...\n", getpid());
-    fprintf(stdout, "info: press ctrl + c to exit sample or attach a debugger.\n");
+    fprintf(stdout, "info: process started (pid=%d)...\n", getpid());
     while (!bye) {
         usleep(2);
     }
@@ -279,7 +283,7 @@ int main(int argc, char **argv) {
 
 You can find the presented code into ``src/samples/setgorgon.c``.
 
-Notice that on debugger function was passed as ``NULL``. It asks ``aegis`` to use its default on debugger function. This
+When on debugger function was passed as ``NULL``. It asks ``aegis`` to use its default on debugger function. This
 default callback is only about calling ``exit(1)``. Thus, after a debugger detection, the process will immediately exit.
 There are some cases that you need to do something before exiting, for those cases on debugger function would be handy.
 Anyway, once a debugger attached, the best action is terminate the process as soon as possible or try to kill the debugger.
@@ -293,7 +297,6 @@ On a terminal run ``setgorgon``
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
 info: process started (pid=28582)...
-info: press ctrl + c to exit sample or attach a debugger.
 ```
 
 Now let's only press ``ctrl + c``:
@@ -301,7 +304,6 @@ Now let's only press ``ctrl + c``:
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
 info: process started (pid=28582)...
-info: press ctrl + c to exit sample or attach a debugger.
 ^C
 info: gracefully exiting, no debugger was detected.
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
@@ -312,7 +314,6 @@ Nice but what about give debugging a try? Let's run it again:
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
 info: process started (pid=14753)...
-info: press ctrl + c to exit sample or attach a debugger.
 ```
 
 On another terminal let's attach ``GDB``:
@@ -340,7 +341,8 @@ No chance for our debugging attempt, let's go back to our setgorgon's terminal:
 ```
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# ./setgorgon
 info: process started (pid=14753)...
-info: press ctrl + c to exit sample or attach a debugger.
+
+info: debugger detected.
 black-beard@QueensAnneRevenge:~/src/aegis/src/samples# _
 ```
 

@@ -21,16 +21,20 @@ int disable_gorgon(void *args) {
     return (*(int *)args);
 }
 
+void on_debugger(void *args) {
+    fprintf(stdout, "\ninfo: debugger detected.\n");
+    exit(1);
+}
+
 int main(int argc, char **argv) {
     signal(SIGINT, sigint_watchdog);
     signal(SIGTERM, sigint_watchdog);
-    if (aegis_set_gorgon(disable_gorgon, &bye, NULL, NULL) != 0) {
+    if (aegis_set_gorgon(disable_gorgon, &bye, on_debugger, NULL) != 0) {
         fprintf(stderr, "error: unable to set gorgon.\n");
         exit(1);
     }
 
-    fprintf(stdout, "info: proces started (pid=%d)...\n", getpid());
-    fprintf(stdout, "info: press ctrl + c to exit sample or attach a debugger.\n");
+    fprintf(stdout, "info: process started (pid=%d)...\n", getpid());
     while (!bye) {
         usleep(2);
     }
