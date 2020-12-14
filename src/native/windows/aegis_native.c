@@ -25,31 +25,30 @@ static struct aegis_gorgon_exec_ctx g_aegis_gorgon = { 0, NULL, NULL, NULL, NULL
 static DWORD WINAPI aegis_gorgon_routine(LPVOID args);
 
 int aegis_has_debugger(void) {
-	int has = (IsDebuggerPresent() != FALSE);
-	PPEB peb = NULL;
-	DWORD nt_global_flag = 0;
-	if (!has) {
+    int has = (IsDebuggerPresent() != FALSE);
+    PPEB peb = NULL;
+    DWORD nt_global_flag = 0;
+    if (!has) {
 #if defined(_WIN64)
-		peb = (PPEB) __readgsqword(0x60);
+        peb = (PPEB) __readgsqword(0x60);
 #elif defined(_WIN32)
-		peb = (PPEB) __readfsdword(0x30);
+        peb = (PPEB) __readfsdword(0x30);
 #else
 # error Some code wanted.
 #endif
-		has = peb->BeingDebugged;
-		
-		if (!has) {
+        has = peb->BeingDebugged;
+        if (!has) {
 #if defined(_WIN64)
-			nt_global_flag = *(PDWORD)((PBYTE)peb + 0xBC);
+            nt_global_flag = *(PDWORD)((PBYTE)peb + 0xBC);
 #elif defined(_WIN32)
-			nt_global_flag = *(PDWORD)((PBYTE)peb + 0x68);
+            nt_global_flag = *(PDWORD)((PBYTE)peb + 0x68);
 #else
 # error Some code wanted.
 #endif
-			has = ((nt_global_flag & 0x70) != 0);
-		}
-	}
-	return has;
+            has = ((nt_global_flag & 0x70) != 0);
+        }
+    }
+    return has;
 }
 
 int aegis_set_gorgon(aegis_gorgon_exit_test_func exit_test, void *exit_test_args,
@@ -60,9 +59,9 @@ int aegis_set_gorgon(aegis_gorgon_exit_test_func exit_test, void *exit_test_args
     g_aegis_gorgon.on_debugger = (on_debugger != NULL) ? on_debugger : aegis_default_on_debugger;
     g_aegis_gorgon.on_debugger_args = on_debugger_args;
     g_aegis_gorgon.thread = CreateThread(NULL, 0, aegis_gorgon_routine, &g_aegis_gorgon, 0, NULL);
-	if (g_aegis_gorgon.thread != NULL) {
-		err = 0;
-	}
+    if (g_aegis_gorgon.thread != NULL) {
+        err = 0;
+    }
     return err;
 }
 

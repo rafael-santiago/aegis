@@ -71,12 +71,11 @@ CUTE_TEST_CASE_END
 #define SIGKILL 9
 
 void kill(pid_t pid, int dummy) {
-	HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	if (proc != NULL) {
-		TerminateProcess(proc, 0);
-		CloseHandle(proc);
-	}
-	
+    HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+    if (proc != NULL) {
+        TerminateProcess(proc, 0);
+        CloseHandle(proc);
+    }
 }
 #endif
 
@@ -258,15 +257,15 @@ static int is_process_running(const pid_t pid) {
     }
     return is;
 #elif defined(_WIN32)
-	HANDLE proc = OpenProcess(SYNCHRONIZE, FALSE, pid);
-	int is = (proc != NULL);
-	DWORD retval;
-	if (is) {
-		retval = WaitForSingleObject(proc, 0);
-		is = (retval == WAIT_TIMEOUT);
-		CloseHandle(proc);
-	}
-	return is;
+    HANDLE proc = OpenProcess(SYNCHRONIZE, FALSE, pid);
+    int is = (proc != NULL);
+    DWORD retval;
+    if (is) {
+        retval = WaitForSingleObject(proc, 0);
+        is = (retval == WAIT_TIMEOUT);
+        CloseHandle(proc);
+    }
+    return is;
 #else
 # Some code wanted.
 #endif
@@ -282,13 +281,13 @@ static pid_t system_nowait(const char *command) {
     }
     return pid;
 #else
-	pid_t pid = 0;
-	STARTUPINFO si = { 0 };
-	PROCESS_INFORMATION pi =  { 0 };	
-	if (CreateProcess(command, NULL, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &pi) != FALSE) {
-		pid = pi.dwProcessId;
-	}
-	return pid;
+    pid_t pid = 0;
+    STARTUPINFO si = { 0 };
+    PROCESS_INFORMATION pi =  { 0 };
+    if (CreateProcess(command, NULL, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &pi) != FALSE) {
+        pid = pi.dwProcessId;
+    }
+    return pid;
 #endif
 }
 
@@ -348,7 +347,7 @@ static int has_gdb(void) {
 #if defined(__unix__)
     return (system("gdb --version > /dev/null 2>&1") == 0);
 #elif defined(_WIN32)
-	return (system("gdb --version > nul 2>&1") == 0);
+    return (system("gdb --version > nul 2>&1") == 0);
 #else
 # error Some code wanted.
 #endif
@@ -358,7 +357,7 @@ static int has_lldb(void) {
 #if defined(__unix__)
     return (system("lldb --version > /dev/null 2>&1") == 0);
 #elif defined(_WIN32)
-	return (system("lldb --version > nul 2>&1") == 0);
+    return (system("lldb --version > nul 2>&1") == 0);
 #else
 # error Some code wanted.
 #endif
