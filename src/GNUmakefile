@@ -18,10 +18,10 @@ endif
 main: mkdirs aegis_native.o aegis_gorgon.o
 	@ar -r ../lib/libaegis.a o/aegis_native.o o/aegis_gorgon.o
 	@echo info: ../lib/libaegis.a was built.
-aegis_native.o: aegis.h $(native_src_dir)/aegis_native.c
-	@cc -c $(native_src_dir)/aegis_native.c -I. -oo/aegis_native.o
-aegis_gorgon.o: $(aegis_gorgon_dir)/aegis_gorgon.c
-	@cc -c $(aegis_gorgon_dir)/aegis_gorgon.c -I. -oo/aegis_gorgon.o
+aegis_native.o: aegis.h native/$(native_src_dir)/aegis_native.c
+	@cc -c native/$(native_src_dir)/aegis_native.c -I. -oo/aegis_native.o
+aegis_gorgon.o: native/$(aegis_gorgon_dir)/aegis_gorgon.c
+	@cc -c native/$(aegis_gorgon_dir)/aegis_gorgon.c -I. -oo/aegis_gorgon.o
 mkdirs:
 	$(shell mkdir o >/dev/null 2>&1)
 	$(shell mkdir ../lib>/dev/null 2>&1)
