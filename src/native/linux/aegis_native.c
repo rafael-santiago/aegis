@@ -44,5 +44,5 @@ int aegis_has_debugger(void) {
         wait(&has);
     }
 
-    return has;
+    return (has != 0);
 }

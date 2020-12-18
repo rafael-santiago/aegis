@@ -30,5 +30,5 @@ int aegis_has_debugger(void) {
     } else {
         waitpid(cpid, &is, 0);
     }
-    return is;
+    return (is != 0);
 }
