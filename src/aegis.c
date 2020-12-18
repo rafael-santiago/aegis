@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int aegis_default_on_debugger(void *args) {
+void aegis_default_on_debugger(void *args) {
     exit(1);
 }
 
