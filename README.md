@@ -31,7 +31,7 @@ as an ``anti-debugging`` stuff.
     - [Debugging mitigation](#debugging-mitigation)
         - [Testing ``setgorgon``](#testing-setgorgon)
     - [``Aegis`` from ``Go``](#aegis-from-go)
-        - [``Wait4Debug`` on ``Go``](#wait4debug-on-go)
+        - [``wait4debug`` on ``Go``](#wait4debug-on-go)
         - [What about a ``Gopher Gorgon``?](#what-about-a-gopher-gorgon)
 
 ## How can I build it?
@@ -399,7 +399,7 @@ The usage of ``Aegis`` on ``Go`` is almost the same of its usage in ``C``. Follo
 
 [``Back``](#contents)
 
-#### ``Wait4Debug`` on ``Go``
+#### ``wait4debug`` on ``Go``
 
 I am taking into consideration that you have already follow my notes about ``wait4debug`` C sample. Doing it
 on ``Go`` is quite straightforward, to. It is only about testing the attachment state by calling ``aegis.HasDebugger()``
