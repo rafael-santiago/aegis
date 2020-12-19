@@ -10,6 +10,7 @@ v1 [git-tag: 'v1']
         - General debugger detection function: aegis_has_debugger().
         - Debugging avoidance function: aegis_set_gorgon().
         - Supported platforms: Linux, FreeBSD, NetBSD, OpenBSD and Windows.
+        - Golang bind.
 
     Bugfixes:
 

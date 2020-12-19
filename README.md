@@ -2,11 +2,12 @@
 #
 
 ``Aegis`` is a library that allows you detect if your software is being debugged or not on ``Linux``, ``FreeBSD``, ``NetBSD``, ``OpenBSD`` and
-``Windows``.
+``Windows``. You can use it natively from ``C`` or use the ``Go`` bind.
 
 The name is about a lousy acronym: **A**n **E**LF's -**g** **i**nspection **s**ignalling. If you are hooked on
 Greek mithology you should know that ``Aegis`` is the name of the shield gave by ``Athena`` to ``Perseus`` to help him
-kill ``Medusa``.
+kill ``Medusa``. If you are using it from ``Windows`` understand as **A**n **E**xecutable's -**g** **i**nspection
+**s**ignalling ;)
 
 On ``Windows`` we have plenty of ways to easily do this kind of detection. Opposingly, on ``Unix`` world we do not have any
 standard way. ``Aegis`` is an attempt of filling up this gap.
@@ -29,6 +30,9 @@ as an ``anti-debugging`` stuff.
         - [Testing ``wait4debug``](#testing-wait4debug)
     - [Debugging mitigation](#debugging-mitigation)
         - [Testing ``setgorgon``](#testing-setgorgon)
+- [Using ``Aegis`` from ``Go``](#using-aegis-from-go)
+    - [``Wait4Debug`` on ``Go``](#wait4debug on Go)
+    - [What about a ``Gopher Gorgon``?](#what-about-a-gopher-gorgon)
 
 ## How can I build it?
 
@@ -359,5 +363,148 @@ bad people, bad things and stuff. Maybe it could be the origin of the ``Medusa``
 Well, that is it, here we are using gorgon to scare debuggers! That's all folks!
 
 ;)
+
+[``Back``](#contents)
+
+## Using ``Aegis`` from ``Go``
+
+I have decided to make an ``Aegis``' ``Go`` bind because I am seeing much applications related to information security
+being writen mainly on ``Go``, showing up during these years (2020). Who knows this bind can be useful for somebody
+somewhere over a concurrent multiplatorm goroutine rainbow... ``Go`` is also my second best programming language so
+I have done it for fun, too. It was a good excuse for using ``Cgo``.
+
+Basically you need to import aegis pacakge from this repo:
+
+```go
+import (
+    "github.com/rafael-santiago/aegis/gopkg"
+)
+```
+
+After you will define in your ``go.mod`` the following:
+
+```
+(...)
+replace github.com/rafael-santiago/aegis/gopkg => github.com/rafael-santiago/aegis/gopkg/v1
+(...)
+```
+
+You can also host it as a local package (no problem). Take a look how it can be done by taking a look at ``go.mod`` from
+``Go`` samples (``gopkg/samples``).
+
+This replace trick you allow you use ``Aegis``' future releases without needing be noisy into your own related code.
+Renaming packages and all those ``MacGyver-like`` incantations.
+
+The usage of ``Aegis`` on ``Go`` is almost the same of its usage in ``C``. Follow on reading if you are interested on it.
+
+[``Back``](#contents)
+
+### ``Wait4Debug`` on ``Go``
+
+I am taking into consideration that you have already follow my notes about ``wait4debug`` C sample. Doing it
+on ``Go`` is quite straightforward, to. It is only about testing the attachment state by calling ``aegis.HasDebugger()``
+oracle function, look:
+
+```go
+//
+// Copyright (c) 2020, Rafael Santiago
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+package main
+
+import (
+    "os"
+    "os/signal"
+    "syscall"
+    "time"
+    "fmt"
+    "github.com/rafael-santiago/aegis/gopkg"
+)
+
+func main() {
+    go func() {
+        sigintWatchdog := make(chan os.Signal, 1)
+        signal.Notify(sigintWatchdog, os.Interrupt)
+        signal.Notify(sigintWatchdog, syscall.SIGINT | syscall.SIGTERM)
+        <-sigintWatchdog
+        fmt.Fprintf(os.Stdout, "\rinfo: ctrl + C received. Aborted.\n")
+        os.Exit(1)
+    }()
+    fmt.Fprintf(os.Stdout, "info: Waiting for debug attachment (pid=%d)...\n", os.Getpid())
+    for !aegis.HasDebugger() {
+        time.Sleep(1 * time.Nanosecond)
+    }
+    fmt.Fprintf(os.Stdout, "\rinfo: Debugged detected. Go home!\n")
+}
+```
+
+The program will wait for a user's ``Ctrl + c`` interruption or for a debugger attachment. It is always important to
+sleep for some time interval, otherwise you will busy the main thread and cause starvation on other threads.
+
+[``Back``](#contents)
+
+### What about a ``Gopher Gorgon``?
+
+Well, if you have some artistic inclination and want to make a ``Medusa-like gopher`` to put here I would be thankful haha!
+
+Anyway, use ``Aegis Gorgon`` in ``Go`` is pretty straightforward, too. You just call ``aegis.SetGorgon()``. Take a look:
+
+```go
+//
+// Copyright (c) 2020, Rafael Santiago
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+package main
+
+import (
+    "os"
+    "os/signal"
+    "syscall"
+    "time"
+    "fmt"
+    "github.com/rafael-santiago/aegis/gopkg"
+)
+
+// INFO(Rafael): This function flags for aegis. SetGorgon if it is time to stop watching and exit.
+func shouldExit(exit interface{}) bool {
+    exitChan := exit.(chan bool)
+    var should bool = false
+    timeout := time.Tick(1 * time.Nanosecond)
+    select {
+        case should = <-(exitChan):
+        case <-timeout:
+    }
+    return should
+}
+
+func main() {
+    exit := make(chan bool, 1)
+    go func(exit chan<- bool) {
+        sigintWatchdog := make(chan os.Signal, 1)
+        signal.Notify(sigintWatchdog, os.Interrupt)
+        signal.Notify(sigintWatchdog, syscall.SIGINT | syscall.SIGTERM)
+        <-sigintWatchdog
+        exit <- true
+        fmt.Fprintf(os.Stdout, "\rinfo: ctrl + c received from the user. Exiting...\n")
+    }(exit)
+    fmt.Fprintf(os.Stdout, "info: process started (pid=%d)...\n", os.Getpid())
+    // INFO(Rafael): Let's be less ambitious here. We will just pass our gracefully exit check function and
+    //               its argument. OnDebugger and OnDebuggerArgs will be null, with this we will use the
+    //               default Aegis' on debugger function that is only about a gross os.Exit(1) >:P
+    go aegis.SetGorgon(shouldExit, exit, nil, nil)
+    // INFO(Rafael): All your sensitive instructions not suitable for eavesdroppers would go here.
+    //               On some requirements you will need to flush some buffers, files and stuff before exiting.
+    //               For those cases you would pass your custom OnDebugger and OnDebuggerArgs to Aegis' Gorgon.
+    <-exit
+}
+```
+
+The program will run still detect a debugger attachment or until be asked for gracefully exiting through a ``ctrl + C``.
 
 [``Back``](#contents)
