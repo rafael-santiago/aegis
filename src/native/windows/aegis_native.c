@@ -12,6 +12,7 @@
 #include <processthreadsapi.h>
 #include <synchapi.h>
 
+#if !defined(CGO)
 struct aegis_gorgon_exec_ctx {
     HANDLE thread;
     aegis_gorgon_exit_test_func should_exit;
@@ -23,6 +24,7 @@ struct aegis_gorgon_exec_ctx {
 static struct aegis_gorgon_exec_ctx g_aegis_gorgon = { 0, NULL, NULL, NULL, NULL };
 
 static DWORD WINAPI aegis_gorgon_routine(LPVOID args);
+#endif // !defined(CGO)
 
 int aegis_has_debugger(void) {
     int has = (IsDebuggerPresent() != FALSE);
@@ -51,6 +53,7 @@ int aegis_has_debugger(void) {
     return has;
 }
 
+#if !defined(CGO)
 int aegis_set_gorgon(aegis_gorgon_exit_test_func exit_test, void *exit_test_args,
                      aegis_gorgon_on_debugger_func on_debugger, void *on_debugger_args) {
     int err = 1;
@@ -83,3 +86,4 @@ static DWORD WINAPI aegis_gorgon_routine(LPVOID args) {
     }
     return 0;
 }
+#endif // !defined(CGO)

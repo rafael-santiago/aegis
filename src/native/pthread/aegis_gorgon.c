@@ -9,6 +9,10 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#if defined(CGO)
+# error You are compiling it from Cgo. Aegis uses native concurrency stuff from go. Do not complicate stuff buddy.
+#endif
+
 struct aegis_gorgon_exec_ctx {
     pthread_t thread;
     aegis_gorgon_exit_test_func should_exit;
