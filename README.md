@@ -30,9 +30,9 @@ as an ``anti-debugging`` stuff.
         - [Testing ``wait4debug``](#testing-wait4debug)
     - [Debugging mitigation](#debugging-mitigation)
         - [Testing ``setgorgon``](#testing-setgorgon)
-- [Using ``Aegis`` from ``Go``](#using-aegis-from-go)
-    - [``Wait4Debug`` on ``Go``](#wait4debug-on-go)
-    - [What about a ``Gopher Gorgon``?](#what-about-a-gopher-gorgon)
+    - [``Aegis`` from ``Go``](#aegis-from-go)
+        - [``Wait4Debug`` on ``Go``](#wait4debug-on-go)
+        - [What about a ``Gopher Gorgon``?](#what-about-a-gopher-gorgon)
 
 ## How can I build it?
 
@@ -366,7 +366,7 @@ Well, that is it, here we are using gorgon to scare debuggers! That's all folks!
 
 [``Back``](#contents)
 
-## Using ``Aegis`` from ``Go``
+### ``Aegis`` from ``Go``
 
 I have decided to make an ``Aegis``' ``Go`` bind because I am seeing much applications related to information security
 being writen mainly on ``Go``, showing up during these years (2020). Who knows this bind can be useful for somebody
@@ -399,7 +399,7 @@ The usage of ``Aegis`` on ``Go`` is almost the same of its usage in ``C``. Follo
 
 [``Back``](#contents)
 
-### ``Wait4Debug`` on ``Go``
+#### ``Wait4Debug`` on ``Go``
 
 I am taking into consideration that you have already follow my notes about ``wait4debug`` C sample. Doing it
 on ``Go`` is quite straightforward, to. It is only about testing the attachment state by calling ``aegis.HasDebugger()``
@@ -446,7 +446,7 @@ sleep for some time interval, otherwise you will busy the main thread and cause 
 
 [``Back``](#contents)
 
-### What about a ``Gopher Gorgon``?
+#### What about a ``Gopher Gorgon``?
 
 Well, if you have some artistic inclination and want to make a ``Medusa-like gopher`` to put here I would be thankful haha!
 
