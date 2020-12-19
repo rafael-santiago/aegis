@@ -1,3 +1,6 @@
+(A) Implement tests for gopkg. +Core,+Test
+(B) Document go sources. +Core,+Documentation
+(B) Run go fmt over all go sources. +Core,+Housekeeping
 x (A) Automate go bind build. +Core,+Build
 x (A) Document go bind usage. +Documentation
 x (A) Implement a go bind. +Core,+Extension

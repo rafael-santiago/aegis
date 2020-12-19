@@ -119,7 +119,7 @@ It will follow this nomenclature scheme: ``libaegis-<os-name>.zip``.
 ### How should I build ``Aegis`` ``Go`` stuff?
 
 ``Go`` is a language with automagically build capabilities. Once inside package sub-directory (``gopkg/vN``) call
-``go build -a``, ``go test`` will do the job. For samples, once inside a sample directory run ``go build -a -o sample-name``.
+``go build -a`` or ``go test`` will do the job. For samples, once inside a sample directory run ``go build -a -o sample-name``.
 It would be the poor man's build for ``Go``.
 
 If you are in a rush and looking for a more automated way of doing it. Inside ``src`` top-level sub-directory invoke ``Hefesto``
