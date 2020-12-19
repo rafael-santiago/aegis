@@ -370,7 +370,7 @@ Well, that is it, here we are using gorgon to scare debuggers! That's all folks!
 
 I have decided to make an ``Aegis``' ``Go`` bind because I am seeing much applications related to information security
 being writen mainly on ``Go``, showing up during these years (2020). Who knows this bind can be useful for somebody
-somewhere over a concurrent multiplatorm goroutine rainbow... ``Go`` is also my second best programming language so
+somewhere over a concurrent multiplatform goroutine rainbow... ``Go`` is also my second best programming language so
 I have done it for fun, too. It was a good excuse for using ``Cgo``.
 
 Basically you need to import aegis pacakge from this repo:
