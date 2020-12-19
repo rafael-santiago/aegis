@@ -41,22 +41,22 @@ function get_app_toolset() : result type string {
 }
 
 local function has_gcc() : result type int {
-	var cmdline type string;
-	if (hefesto.sys.os_name() != "windows") {
-		$cmdline = "gcc --version > /dev/null 2>&1";
-	} else {
-		$cmdline = "gcc --version > nul 2>&1";
-	}
+    var cmdline type string;
+    if (hefesto.sys.os_name() != "windows") {
+        $cmdline = "gcc --version > /dev/null 2>&1";
+    } else {
+        $cmdline = "gcc --version > nul 2>&1";
+    }
     result (hefesto.sys.run($cmdline) == 0);
 }
 
 local function has_clang() : result type int {
-	var cmdline type string;
-	if (hefesto.sys.os_name() != "windows") {
-		$cmdline = "clang --version > /dev/null 2>&1";
-	} else {
-		$cmdline = "clang --version > nul 2>&1";
-	}
+    var cmdline type string;
+    if (hefesto.sys.os_name() != "windows") {
+        $cmdline = "clang --version > /dev/null 2>&1";
+    } else {
+        $cmdline = "clang --version > nul 2>&1";
+    }
     result (hefesto.sys.run($cmdline) == 0);
 }
 
@@ -208,4 +208,113 @@ local function mkdist(distpkg_name_path type string) : result type int {
         $zip_command = "7z.exe a -tzip " + $distpkg_name_path + " lib\\*.a include\\*.h > nul 2>&1";
     }
     result hefesto.sys.run($zip_command);
+}
+
+local function get_tag_version(default type string) : result type string {
+    var exit_code type int;
+    $exit_code = hefesto.sys.run("git describe --tags --abbrev=0 > .curr-tag 2>&1");
+    var tag type string;
+    if ($exit_code != 0) {
+        var curr_tag type list;
+        $curr_tag = hefesto.sys.lines_from_file(".curr-tag", ".*");
+        $tag = $curr_tag.item(0);
+        if ($tag.match("^v") == 0) {
+            $tag = $default;
+            hefesto.sys.echo("WARN: Unable to detect what tag your repo copy is currently on. Assuming " + $default + ".\n");
+        }
+    } else {
+        $tag = $default;
+        hefesto.sys.echo("WARN: Unable to detect what tag your repo copy is currently on. Assuming " + $default + ".\n");
+    }
+    hefesto.sys.rm(".curr-tag");
+    result $tag;
+}
+
+local function go_build(output type string) : result type int {
+    var cmdline type string;
+    $cmdline = "go build -a";
+    if ($output.len() > 1) {
+        $cmdline = $cmdline + " -o " + $output;
+    }
+    result hefesto.sys.run($cmdline);
+}
+
+local function go_build_sample(subdir type string) : result type int {
+    var oldcwd type string;
+    $oldcwd = hefesto.sys.pwd();
+
+    if (hefesto.sys.cd($subdir) != 1) {
+        hefesto.sys.echo("ERROR: Unable to find '" + $subdir + "'.\n");
+        result 1;
+    }
+
+    var target type string;
+    $target = "../../../samples/golang-" + filenamefrompath($subdir);
+    if (hefesto.sys.os_name() == "windows") {
+        $target = $target + ".exe";
+    }
+
+    var exit_code type int;
+    hefesto.sys.echo("INFO: Now building '" + $subdir + "'. Wait...\n");
+    $exit_code = go_build($target);
+
+    if ($exit_code == 0) {
+        hefesto.sys.echo("INFO: Done.\n");
+    } else {
+        hefesto.sys.echo("ERROR: Unable to build '" + $subdir + "'.\n");
+    }
+
+    hefesto.sys.cd($oldcwd);
+
+    result $exit_code;
+}
+
+local function build_gopkg() : result type none {
+    var oldcwd type string;
+    $oldcwd = hefesto.sys.pwd();
+
+    if (hefesto.sys.cd("../gopkg") != 1) {
+        hefesto.sys.echo("ERROR: Unable to find gopkg directory.\n");
+        hefesto.project.abort(1);
+    }
+
+    var exit_code type int;
+    $exit_code = 1;
+
+    var current_version type string;
+    $current_version = get_tag_version("v1");
+
+    var samples_subdir type list;
+    $samples_subdir.add_item("samples/wait4debug");
+    $samples_subdir.add_item("samples/setgorgon");
+
+    if (hefesto.sys.cd($current_version) == 1) {
+        hefesto.sys.echo("INFO: Now building 'gopkg/" + $current_version + "'. Wait...\n");
+        $exit_code = go_build("");
+        if ($exit_code == 0) {
+            hefesto.sys.echo("INFO: Done.\n");
+            hefesto.sys.cd("..");
+            var s type int;
+            $s = 0;
+            while ($s < $samples_subdir.count() && $exit_code == 0) {
+                var curr_sample_location type string;
+                $curr_sample_location = $samples_subdir.item($s);
+                $exit_code = go_build_sample($curr_sample_location);
+                $s = $s + 1;
+            }
+            # TODO(Rafael): Once samples sucessfully built, run gopkg tests.
+        } else {
+            hefesto.sys.echo("ERROR: Unable to build 'gopkg/" + $current_version + "'.\n");
+        }
+    } else {
+        hefesto.sys.echo("ERROR: Unable to find 'gopkg/" + $current_version + "'.\n");
+    }
+
+    if ($exit_code == 0) {
+        hefesto.sys.echo("INFO: Nice. All your Aegis golang samples were succesfully built on '../samples'.\n" +
+                         "      They are prepended with 'golang-'. Happy hacking! ;)\n");
+    }
+
+    hefesto.sys.cd($oldcwd);
+    hefesto.project.abort($exit_code);
 }

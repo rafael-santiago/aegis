@@ -25,6 +25,7 @@ as an ``anti-debugging`` stuff.
     - [Build it by using ``Hefesto``](#building-it-by-using-hefesto)
     - [Poor man's build by using make](#poor-mans-build-by-using-make)
     - [Making a distribution package](#making-a-distribution-package)
+    - [How should I build ``Aegis`` ``Go`` stuff?](#how-should-i-build-aegis-go-stuff)
 - [Using Aegis](#using-aegis)
     - [Debugging detection](#debugging-detection)
         - [Testing ``wait4debug``](#testing-wait4debug)
@@ -112,6 +113,25 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 Once done the distribution package will be at ``../lib`` sub-directory. The package's name depends on your system.
 It will follow this nomenclature scheme: ``libaegis-<os-name>.zip``.
+
+[``Back``](#contents)
+
+### How should I build ``Aegis`` ``Go`` stuff?
+
+``Go`` is a language with automagically build capabilities. Once inside package sub-directory (``gopkg/vN``) call
+``go build -a``, ``go test`` will do the job. For samples, once inside a sample directory run ``go build -a -o sample-name``.
+It would be the poor man's build for ``Go``.
+
+If you are in a rush and looking for a more automated way of doing it. Inside ``src`` top-level sub-directory invoke ``Hefesto``
+passing ``--gopkg`` build option:
+
+```
+black-beard@QueensAnneRevenge:~/src/aegis/src# hefesto --gopkg
+(...)
+black-beard@QueensAnneRevenge:~/src/aegis/src# _
+```
+
+After a successful build you will got the ``Go`` samples inside ``../samples`` with their names prepended with ``golang-``.
 
 [``Back``](#contents)
 

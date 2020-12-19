@@ -1,5 +1,5 @@
-(A) Automate go bind building. +Core,+Build
-(A) Document go bind usage. +Documentation
+x (A) Automate go bind build. +Core,+Build
+x (A) Document go bind usage. +Documentation
 x (A) Implement a go bind. +Core,+Extension
 x (A) Implement aegis_set_gorgon() tests. +Core,+Test
 x (A) Tidy up native codes infrastructure. +Core,+Improvement,+Housekeeping

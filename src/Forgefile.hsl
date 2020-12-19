@@ -31,6 +31,11 @@ libaegis.prologue() {
         build("dist");
     }
 
+    $option = hefesto.sys.get_option("gopkg");
+    if ($option.count() > 0) {
+        build("gopkg");
+    }
+
     $srcs.ls(".*\\.c$");
 
     var platform type string;
