@@ -27,7 +27,6 @@ import "C"
 import (
     "os"
     "time"
-//    "fmt"
 )
 
 type AegisGorgonExitFunc func(args interface{})bool
@@ -54,7 +53,6 @@ func SetGorgon(exitFunc AegisGorgonExitFunc, exitFuncArgs interface{},
                           onDebuggerFuncArgs interface{}, done chan bool) {
         var stop bool = false
         for !stop {
-            //fmt.Println("gorgonRoutine...")
             if (C.aegis_has_debugger() == 1) {
                 go func(done chan bool) {
                         // INFO(Rafael): There is no way to know what user is intending on doing on OnDebugger.
@@ -68,11 +66,9 @@ func SetGorgon(exitFunc AegisGorgonExitFunc, exitFuncArgs interface{},
                     }(done)
                 onDebugger(onDebuggerFuncArgs)
             }
-            //fmt.Println(stop)
             if exitFunc != nil {
                 stop = exitFunc(exitFuncArgs)
             }
-            //fmt.Println(stop)
             if !stop {
                 timeout := time.Tick(1 * time.Nanosecond)
                 select {
@@ -80,9 +76,7 @@ func SetGorgon(exitFunc AegisGorgonExitFunc, exitFuncArgs interface{},
                     case <-timeout:
                 }
             }
-            //fmt.Println(stop)
             time.Sleep(1 * time.Nanosecond)
-            //fmt.Println("--")
         }
         done <- true
     }
