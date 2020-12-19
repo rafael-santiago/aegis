@@ -505,6 +505,6 @@ func main() {
 }
 ```
 
-The program will run still detect a debugger attachment or until be asked for gracefully exiting through a ``ctrl + C``.
+The program will run until detecting a debugger attachment or being asked for gracefully exiting through a ``ctrl + C``.
 
 [``Back``](#contents)
