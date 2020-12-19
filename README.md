@@ -31,7 +31,7 @@ as an ``anti-debugging`` stuff.
     - [Debugging mitigation](#debugging-mitigation)
         - [Testing ``setgorgon``](#testing-setgorgon)
 - [Using ``Aegis`` from ``Go``](#using-aegis-from-go)
-    - [``Wait4Debug`` on ``Go``](#wait4debug on Go)
+    - [``Wait4Debug`` on ``Go``](#wait4debug-on-go)
     - [What about a ``Gopher Gorgon``?](#what-about-a-gopher-gorgon)
 
 ## How can I build it?
