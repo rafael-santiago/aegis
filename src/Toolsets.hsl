@@ -239,6 +239,10 @@ local function go_build(output type string) : result type int {
     result hefesto.sys.run($cmdline);
 }
 
+local function go_test() : result type int {
+    result hefesto.sys.run("go test");
+}
+
 local function go_build_sample(subdir type string) : result type int {
     var oldcwd type string;
     $oldcwd = hefesto.sys.pwd();
@@ -302,7 +306,17 @@ local function build_gopkg() : result type none {
                 $exit_code = go_build_sample($curr_sample_location);
                 $s = $s + 1;
             }
-            # TODO(Rafael): Once samples sucessfully built, run gopkg tests.
+            if ($exit_code == 0) {
+                if (hefesto.sys.cd($current_version) == 1) {
+                    $exit_code = go_test();
+                    if ($exit_code != 0) {
+                        hefesto.sys.echo("BUILD ERROR: 'gopkg/" + $current_version + "' tests has broken.\n");
+                    }
+                } else {
+                    $exit_code = 1;
+                    hefesto.sys.echo("ERROR: Unable to run 'gopkg/" + $current_version + "' tests.\n");
+                }
+            }
         } else {
             hefesto.sys.echo("ERROR: Unable to build 'gopkg/" + $current_version + "'.\n");
         }
@@ -311,7 +325,7 @@ local function build_gopkg() : result type none {
     }
 
     if ($exit_code == 0) {
-        hefesto.sys.echo("INFO: Nice. All your Aegis golang samples were succesfully built on '../samples'.\n" +
+        hefesto.sys.echo("____\nINFO: Nice. All your Aegis golang samples were succesfully built on '../samples'.\n" +
                          "      They are prepended with 'golang-'. Happy hacking! ;)\n");
     }
 

@@ -29,5 +29,5 @@ func main() {
     for !aegis.HasDebugger() {
         time.Sleep(1 * time.Nanosecond)
     }
-    fmt.Fprintf(os.Stdout, "\rinfo: Debugged detected. Go home!\n")
+    fmt.Fprintf(os.Stdout, "\rinfo: Debug detected. Go home!\n")
 }
