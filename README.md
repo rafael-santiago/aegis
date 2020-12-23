@@ -34,6 +34,7 @@ as an ``anti-debugging`` stuff.
     - [``Aegis`` from ``Go``](#aegis-from-go)
         - [``wait4debug`` on ``Go``](#wait4debug-on-go)
         - [What about a ``Gopher Gorgon``?](#what-about-a-gopher-gorgon)
+- [Contributors](#contributors)
 
 ## How can I build it?
 
@@ -526,5 +527,16 @@ func main() {
 ```
 
 The program will run until detecting a debugger attachment or being asked for gracefully exiting through a ``ctrl + C``.
+
+[``Back``](#contents)
+
+## Contributors
+
+**Table 1**: Contributors.
+
+|   ||       **Who**          | **Contact**  |                   **What**                          |
+|:-:||:----------------------:|:------------:|:---------------------------------------------------:|
+|![Rafael Santiago boo!](https://github.com/rafael-santiago.png =60x60)|
+     |  ``Rafael Santiago``   | ``/dev/null``| ``C library``, Initial ``cgo-bind``, maintainer     |
 
 [``Back``](#contents)
