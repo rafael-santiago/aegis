@@ -534,9 +534,9 @@ The program will run until detecting a debugger attachment or being asked for gr
 
 **Table 1**: Contributors.
 
-|   ||       **Who**          | **Contact**  |                   **What**                          |
-|:-:||:----------------------:|:------------:|:---------------------------------------------------:|
+|   |       **Who**          | **Contact**  |                   **What**                          |
+|:-:|:----------------------:|:------------:|:---------------------------------------------------:|
 |<img src="https://github.com/rafael-santiago.png" width=60 height=60>|
-        ``Rafael Santiago``   | ``/dev/null``| ``C library``, Initial ``cgo-bind``, maintainer     |
+       ``Rafael Santiago``   | ``/dev/null``| ``C library``, Initial ``cgo-bind``, maintainer     |
 
 [``Back``](#contents)
