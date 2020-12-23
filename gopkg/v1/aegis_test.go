@@ -20,6 +20,8 @@ import (
 
 const kTestSleepInSecs = 1
 
+const kNextAttemptsNr = 65535
+
 func hasGDB() bool {
     cmd := exec.Command("gdb", "--version")
     _, err := cmd.CombinedOutput()
@@ -79,7 +81,7 @@ func runTestApp(appPath string) int {
         []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
         nil,
     }
-    pid, err := syscall.ForkExec(appPath, []string{}, &appProcAttr)
+    pid, err := syscall.ForkExec(appPath, []string{""}, &appProcAttr)
     if err != nil {
         return 0
     }
@@ -209,16 +211,16 @@ func TestHasDebugger(t *testing.T) {
 
         time.Sleep((5 * kTestSleepInSecs) * time.Nanosecond)
 
-        ntry := 20
-        for ntry > 0 {
+        ntry := kNextAttemptsNr
+        var isRunning bool = true
+        for ntry > 0 && isRunning  {
             gdbNext(gdbProc)
             time.Sleep(1 * time.Nanosecond)
             ntry--
+            isRunning = isProcessRunning(pid)
         }
 
-        time.Sleep(kTestSleepInSecs * time.Second)
-
-        if isProcessRunning(pid) {
+        if isRunning {
             t.Error(`isProcessRunning(pid) == true`)
         }
 
@@ -322,16 +324,16 @@ func TestHasDebugger(t *testing.T) {
 
         time.Sleep((5 * kTestSleepInSecs) * time.Nanosecond)
 
-        ntry := 20
-        for ntry > 0 {
+        ntry := kNextAttemptsNr
+        var isRunning bool = true
+        for ntry > 0 && isRunning {
             lldbNext(lldbProc)
             time.Sleep(1 * time.Nanosecond)
             ntry--
+            isRunning = isProcessRunning(pid)
         }
 
-        time.Sleep(kTestSleepInSecs * time.Second)
-
-        if isProcessRunning(pid) {
+        if isRunning {
             t.Error(`isProcessRunning(pid) == true`)
         }
 
@@ -443,16 +445,16 @@ func TestSetGorgon(t *testing.T) {
 
         time.Sleep((5 * kTestSleepInSecs) * time.Nanosecond)
 
-        ntry := 20
-        for ntry > 0 {
+        ntry := kNextAttemptsNr
+        var isRunning bool = true
+        for ntry > 0 && isRunning {
             gdbNext(gdbProc)
             time.Sleep(1 * time.Nanosecond)
             ntry--
+            isRunning = isProcessRunning(pid)
         }
 
-        time.Sleep(kTestSleepInSecs * time.Second)
-
-        if isProcessRunning(pid) {
+        if isRunning {
             t.Error(`isProcessRunning(pid) == true`)
         }
 
@@ -556,16 +558,16 @@ func TestSetGorgon(t *testing.T) {
 
         time.Sleep((5 * kTestSleepInSecs) * time.Nanosecond)
 
-        ntry := 20
-        for ntry > 0 {
+        ntry := kNextAttemptsNr
+        var isRunning bool = true
+        for ntry > 0 && isRunning {
             lldbNext(lldbProc)
             time.Sleep(1 * time.Nanosecond)
             ntry--
+            isRunning = isProcessRunning(pid)
         }
 
-        time.Sleep(kTestSleepInSecs * time.Second)
-
-        if isProcessRunning(pid) {
+        if isRunning {
             t.Error(`isProcessRunning(pid) == true`)
         }
 

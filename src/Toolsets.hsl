@@ -308,9 +308,12 @@ local function build_gopkg() : result type none {
             }
             if ($exit_code == 0) {
                 if (hefesto.sys.cd($current_version) == 1) {
+                    hefesto.sys.echo("INFO: Now testing 'gopkg/" + $current_version + "'. Wait...\n");
                     $exit_code = go_test();
                     if ($exit_code != 0) {
                         hefesto.sys.echo("BUILD ERROR: 'gopkg/" + $current_version + "' tests has broken.\n");
+                    } else {
+                        hefesto.sys.echo("INFO: Done.\n");
                     }
                 } else {
                     $exit_code = 1;

@@ -16,7 +16,7 @@ import (
     "github.com/rafael-santiago/aegis/gopkg"
 )
 
-// INFO(Rafael): This function flags for aegis. SetGorgon if it is time to stop watching and exit.
+// INFO(Rafael): This function flags for aegis.SetGorgon() if it is time to stop watching and exit.
 func shouldExit(exit interface{}) bool {
     exitChan := exit.(chan bool)
     var should bool = false

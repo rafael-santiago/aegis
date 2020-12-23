@@ -54,27 +54,16 @@ func SetGorgon(exitFunc AegisGorgonExitFunc, exitFuncArgs interface{},
         var stop bool = false
         for !stop {
             if (C.aegis_has_debugger() == 1) {
-                go func(done chan bool) {
-                        // INFO(Rafael): There is no way to know what user is intending on doing on OnDebugger.
-                        //               Anyway, on sane anti-debugging mitigations we need to exit process.
-                        //               This function will schedule a gracefully SetGorgon exit before
-                        //               actually calling user defined OnDebugger statements. Since we are
-                        //               probably exiting here, there is no problem on leaking this go routine,
-                        //               but for conscience's sake let's try to exit more gracefully as possible.
-                        time.Sleep(10 * time.Nanosecond)
-                        done <- true
-                    }(done)
-                onDebugger(onDebuggerFuncArgs)
+                // INFO(Rafael): There is no way to know what user is intending on doing on OnDebugger.
+                //               Anyway, on sane anti-debugging mitigations we need to exit process.
+                //               Since we are probably exiting here (in a panic situation), there is no
+                //               problem on leaking this go routine, but for conscience's sake let's try
+                //               to exit more gracefully as possible.
+                defer onDebugger(onDebuggerFuncArgs)
+                stop = true
             }
-            if exitFunc != nil {
+            if !stop && exitFunc != nil {
                 stop = exitFunc(exitFuncArgs)
-            }
-            if !stop {
-                timeout := time.Tick(1 * time.Nanosecond)
-                select {
-                    case stop = <-done:
-                    case <-timeout:
-                }
             }
             time.Sleep(1 * time.Nanosecond)
         }
