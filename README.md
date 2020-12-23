@@ -536,7 +536,7 @@ The program will run until detecting a debugger attachment or being asked for gr
 
 |   ||       **Who**          | **Contact**  |                   **What**                          |
 |:-:||:----------------------:|:------------:|:---------------------------------------------------:|
-|![Rafael Santiago boo!](https://github.com/rafael-santiago.png =60x60)|
+|![Rafael Santiago boo](https://github.com/rafael-santiago.png =60x60)|
      |  ``Rafael Santiago``   | ``/dev/null``| ``C library``, Initial ``cgo-bind``, maintainer     |
 
 [``Back``](#contents)
