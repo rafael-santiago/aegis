@@ -536,6 +536,6 @@ The following table lists all contributors for this project until now.
 
 |            **GitHub profile**  |       **Who**          |        **Contact**          |                            **Done stuff**                               |
 |:------------------------------:|:----------------------:|:---------------------------:|:-----------------------------------------------------------------------:|
-|<a href="https://github.com/rafael-santiago" target="_blank"><img src="https://github.com/rafael-santiago.png" width=60 height=60></a>|``Rafael Santiago``|``/dev/null``|Initial idea, ``C library``, initial ``cgo-bind``, current maintainer.|
+|[<img src="https://github.com/rafael-santiago.png" width=60 height=60></a>](https://github.com/rafael-santiago){:target="_blank"}|``Rafael Santiago``|``/dev/null``|Initial idea, ``C library``, initial ``cgo-bind``, current maintainer.|
 
 [``Back``](#contents)
