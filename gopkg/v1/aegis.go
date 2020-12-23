@@ -1,4 +1,5 @@
-//
+// package aegis gathers all constants, types and functions related to libaegis cgo bind.
+// --
 // Copyright (c) 2020, Rafael Santiago
 // All rights reserved.
 //
@@ -29,16 +30,23 @@ import (
     "time"
 )
 
+// AegisGorgonExitFunc defines the type of exit oracle function called by Aegis' anti-debugging gorgon.
 type AegisGorgonExitFunc func(args interface{})bool
 
+// AegisGorgonOnDebuggerFunc defines the type of OnDebugger functions that will be triggered by Aegis' during a debugging attempting.
 type AegisGorgonOnDebuggerFunc func(args interface{})
 
+// HasDebugger is a Go wrapper for aegis_has_debugger() from libaegis. HasDebugger returns true is a debugger is detected otherwise (guess what?) false.
 func HasDebugger() bool {
     return (C.aegis_has_debugger() == 1)
 }
 
+// SetGorgon is a Go native implementation of aegis_set_gorgon(). This function installs a goroutine responsible for watching out a debugging attempt.
+// The argument exitFunc is a function that verifies if it is time to gracefully exiting. Its arguments is the 'generic' argument exitFuncArgs.
+// The argument onDebuggerFunc is a function that takes some action when a debugger is detected. Its arguments is the 'generic' argument onDebuggerFuncArgs.
+// When onDebuggerFunc is nil Aegis will use its internal default onDebuggerFunc (defaultOnDebugger).
 func SetGorgon(exitFunc AegisGorgonExitFunc, exitFuncArgs interface{},
-               onDebuggerFunc AegisGorgonOnDebuggerFunc, OnDebuggerFuncArgs interface{}) {
+               onDebuggerFunc AegisGorgonOnDebuggerFunc, onDebuggerFuncArgs interface{}) {
     var onDebugger AegisGorgonOnDebuggerFunc
 
     if onDebuggerFunc != nil {
@@ -72,10 +80,11 @@ func SetGorgon(exitFunc AegisGorgonExitFunc, exitFuncArgs interface{},
 
     done :=  make(chan bool, 1)
 
-    go gorgonRoutine(exitFunc, exitFuncArgs, onDebugger, OnDebuggerFuncArgs, done)
+    go gorgonRoutine(exitFunc, exitFuncArgs, onDebugger, onDebuggerFuncArgs, done)
     <- done
 }
 
+// defaultOnDebugger is the internal Aegis onDebuggerFunc. It is rather gross, being only about a os.Exit(1) and period.
 func defaultOnDebugger(args interface{}) {
     os.Exit(1)
 }

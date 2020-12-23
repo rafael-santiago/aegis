@@ -1,5 +1,5 @@
-(B) Document go sources. +Core,+Documentation
 (B) Run go fmt over all go sources. +Core,+Housekeeping
+x (B) Document go sources. +Core,+Documentation
 x (A) Implement tests for gopkg. +Core,+Test
 x (A) Automate go bind build. +Core,+Build
 x (A) Document go bind usage. +Documentation
