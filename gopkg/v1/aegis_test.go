@@ -112,6 +112,15 @@ func isProcessRunning(pid int) bool {
 
 func TestHasDebugger(t *testing.T) {
     runGDBTests := hasGDB()
+    if runtime.GOOS == "openbsd" {
+        if runGDBTests == false {
+            t.Error(`runGDBTests == false`)
+        }
+        if hasDebuggerOpenBSD() == false {
+            t.Error(`hasDebuggerOpenBSD() == false`)
+        }
+        return
+    }
     runLLDBTests := hasLLDB()
     if !runGDBTests && !runLLDBTests {
         t.Error(`!runGDBTests && !runLLDBTests: You need at least GDB or LLDB installed to execute tests.`)
@@ -346,6 +355,13 @@ func TestHasDebugger(t *testing.T) {
 
 func TestSetGorgon(t *testing.T) {
     runGDBTests := hasGDB()
+    if runtime.GOOS == "openbsd" {
+        if runGDBTests == false {
+            t.Error(`runGDBTests == false`)
+        }
+        setGorgonOpenBSD()
+        return
+    }
     runLLDBTests := hasLLDB()
     if !runGDBTests && !runLLDBTests {
         t.Error(`!runGDBTests && !runLLDBTests: You need at least GDB or LLDB installed to execute tests.`)
@@ -578,3 +594,92 @@ func TestSetGorgon(t *testing.T) {
     }
 }
 
+func hasDebuggerOpenBSD() bool {
+    const kBacalhuffy = `rm out.txt > /dev/null 2>&1
+../../samples/golang-wait4debug > out.txt &
+sleep 5
+pid=$(cat out.txt | tail -n 1 | cut -d '=' -f 2,7 | cut -d ')' -f 1)
+echo "attach ${pid}" > $HOME/.gdbinit
+echo "continue" >> $HOME/.gdbinit
+echo "quit" >> $HOME/.gdbinit
+gdb > /dev/null 2>&1
+rm ${HOME}/.gdbinit out.txt
+ps -p ${pid} > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+    echo "OpenBSD Bacalhuffy info: program has exited."
+    exit 0
+else
+    kill -9 ${pid}
+    echo "OpenBSD Bacalhuffy error: program is still running."
+    exit 1
+fi
+`
+    fp, err := os.Create(".bacalhuffy.sh")
+    if err != nil {
+        return false
+    }
+    defer fp.Close()
+    //defer os.Remove("bacalhuffy.sh")
+    fp.WriteString(kBacalhuffy)
+
+    cmd := exec.Command("chmod", "+x", ".bacalhuffy.sh")
+    cmd.Start()
+
+    cmd = exec.Command("./.bacalhuffy.sh")
+    cmd.Start()
+
+    if errCmd := cmd.Wait(); errCmd != nil {
+        if _, ok := errCmd.(*exec.ExitError); ok {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    return false
+}
+
+func setGorgonOpenBSD() bool {
+    const kBacalhuffy = `rm out.txt > /dev/null 2>&1
+../../samples/golang-setgorgon > out.txt &
+sleep 5
+pid=$(cat out.txt | tail -n 1 | cut -d '=' -f 2,7 | cut -d ')' -f 1)
+echo "attach ${pid}" > $HOME/.gdbinit
+echo "continue" >> $HOME/.gdbinit
+echo "quit" >> $HOME/.gdbinit
+gdb > /dev/null 2>&1
+rm ${HOME}/.gdbinit out.txt
+ps -p ${pid} > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+    echo "OpenBSD Bacalhuffy info: program has exited."
+    exit 0
+else
+    kill -9 ${pid}
+    echo "OpenBSD Bacalhuffy error: program is still running."
+    exit 1
+fi
+`
+    fp, err := os.Create(".bacalhuffy.sh")
+    if err != nil {
+        return false
+    }
+    defer fp.Close()
+    //defer os.Remove("bacalhuffy.sh")
+    fp.WriteString(kBacalhuffy)
+
+    cmd := exec.Command("chmod", "+x", ".bacalhuffy.sh")
+    cmd.Start()
+
+    cmd = exec.Command("./.bacalhuffy.sh")
+    cmd.Start()
+
+    if errCmd := cmd.Wait(); errCmd != nil {
+        if _, ok := errCmd.(*exec.ExitError); ok {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    return false
+}
