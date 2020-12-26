@@ -538,10 +538,10 @@ The program will run until detecting a debugger attachment or being asked for gr
 
 ## Contributors
 
-The following table lists all contributors for this project until now.
+The following table lists all project's contributors until now.
 
 |            **GitHub profile**  |       **Who**          |        **Contact**          |                            **Contributions**                            |
 |:------------------------------:|:-----------------------|:---------------------------:|:-----------------------------------------------------------------------:|
-|[<img src="https://github.com/rafael-santiago.png" width=60 height=60>](https://github.com/rafael-santiago)|``Rafael Santiago``|``/dev/null``|Initial idea, ``C library``, initial ``cgo-bind``, current maintainer.|
+|[<img src="https://github.com/rafael-santiago.png" width=60 height=60>](https://github.com/rafael-santiago)|Rafael Santiago|``/dev/null``|Initial idea, ``C library``, initial ``cgo-bind``, current maintainer.|
 
 [``Back``](#contents)
