@@ -10,6 +10,7 @@
 package aegis
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"syscall"
@@ -36,7 +37,7 @@ func isProcessRunningNative(pid int) bool {
 	if len(data) > 0 && data[0] == 't' {
 		ntry := 20
 		for ntry > 0 && len(data) > 0 && data[0] == 't' {
-			time.Sleep(kTestSleepInSecs * time.Second)
+			time.Sleep(1 * time.Second)
 			data, err = cmd.CombinedOutput()
 			ntry--
 		}
