@@ -389,12 +389,12 @@ Well, that is it, here we are using gorgon to scare debuggers! That's all folks!
 
 ### ``Aegis`` from ``Go``
 
-I have decided to make an ``Aegis``' ``Go`` bind because I am seeing much applications related to information security
-being writen mainly on ``Go``, showing up during these years (2020). Who knows this bind can be useful for somebody
+I have decided to make an ``Aegis``' ``Go`` bind because I am watching many applications related to information security
+being written mainly on ``Go``, showing up during these years (2020). Who knows this bind can be useful for somebody
 somewhere over a concurrent multiplatform goroutine rainbow... ``Go`` is also my second best programming language so
 I have done it for fun, too. It was a good excuse for using ``Cgo``.
 
-Basically you need to import aegis pacakge from this repo:
+Basically, you need to import aegis package from this repo:
 
 ```go
 import (
@@ -413,8 +413,8 @@ replace github.com/rafael-santiago/aegis/gopkg => github.com/rafael-santiago/aeg
 You can also host it as a local package (no problem). Take a look how it can be done by taking a look at ``go.mod`` from
 ``Go`` samples (``gopkg/samples``).
 
-This replace trick you allow you use ``Aegis``' future releases without needing be noisy into your own related code.
-Renaming packages and all those ``MacGyver-like`` incantations.
+This replace trick will allow you use ``Aegis``' future releases without needing be noisy into your own related code.
+Renaming packages and all those ``MacGyver-like`` incantations, ready to go...
 
 The usage of ``Aegis`` on ``Go`` is almost the same of its usage in ``C``. Follow on reading if you are interested on it.
 
@@ -422,8 +422,8 @@ The usage of ``Aegis`` on ``Go`` is almost the same of its usage in ``C``. Follo
 
 #### ``wait4debug`` on ``Go``
 
-I am taking into consideration that you have already follow my notes about ``wait4debug`` C sample. Doing it
-on ``Go`` is quite straightforward, to. It is only about testing the attachment state by calling ``aegis.HasDebugger()``
+I am taking into consideration that you have already followed my notes about ``wait4debug`` C sample. Doing it
+on ``Go`` is quite straightforward, too. It is only about testing the attachment state by calling ``aegis.HasDebugger()``
 oracle function, look:
 
 ```go
@@ -463,7 +463,7 @@ func main() {
 }
 ```
 
-The program will wait for a user's ``Ctrl + c`` interruption or for a debugger attachment. It is always important to
+The program will wait for a user's ``Ctrl + c`` interruption or for a debugger attaching. It is always important to
 sleep for some time interval, otherwise you will busy the main thread and cause starvation on other threads.
 
 [``Back``](#contents)
@@ -532,7 +532,7 @@ func main() {
 }
 ```
 
-The program will run until detecting a debugger attachment or being asked for gracefully exiting through a ``ctrl + C``.
+The program will run until detecting a debugger be attached or being asked for gracefully exiting through a ``ctrl + C``.
 
 [``Back``](#contents)
 

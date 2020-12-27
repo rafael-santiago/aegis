@@ -87,7 +87,7 @@ func SetGorgon(exitFunc AegisGorgonExitFunc, exitFuncArgs interface{},
 	<-done
 }
 
-// defaultOnDebugger is the internal Aegis onDebuggerFunc. It is rather gross, being only about a os.Exit(1) and period.
+// defaultOnDebugger is the internal Aegis onDebuggerFunc. It is rather gross, being only about an os.Exit(1) and period.
 func defaultOnDebugger(args interface{}) {
 	os.Exit(1)
 }
