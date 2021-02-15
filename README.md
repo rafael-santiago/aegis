@@ -5,7 +5,7 @@
 ``Windows``. You can use it natively from ``C`` or use the ``Go`` bind.
 
 The name is about a lousy acronym: **A**n **E**LF's -**g** **i**nspection **s**ignalling. If you are hooked on
-Greek mithology you should know that ``Aegis`` is the name of the shield gave by ``Athena`` to ``Perseus`` to help him
+Greek mythology you should know that ``Aegis`` is the name of the shield gave by ``Athena`` to ``Perseus`` to help him
 kill ``Medusa``. If you are using it from ``Windows`` understand as **A**n **E**xecutable's -**g** **i**nspection
 **s**ignalling ;)
 
@@ -38,7 +38,7 @@ as an ``anti-debugging`` stuff.
 
 ## How can I build it?
 
-I am using a build tool of mine called [``Hefesto``](https://github.com/rafael-santiago/hefesto) (Yes, mithology, I love it).
+I am using a build tool of mine called [``Hefesto``](https://github.com/rafael-santiago/hefesto) (Yes, mythology, I love it).
 
 If you are looking for running the build in all its capabilities you need ``Hefesto`` otherwise I also supply a well-simple
 Makefile.
@@ -148,7 +148,7 @@ After a successful build you will got the ``Go`` samples inside ``../samples`` w
 
 - Detect debugging.
 
-- Protect against debugging by using our simpathetic ``Gorgon`` (yes, I know, Greek mitholoy again).
+- Protect against debugging by using our simpathetic ``Gorgon`` (yes, I know, Greek mythology again).
 
 **Remark**: In order to make this anti-debug resilient against library hooking you always should link your software ``static``.
 Moreover, if you want to keep eavesdroppers out as much as possible: link your software static. Otherwise there is no necessity
