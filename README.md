@@ -34,7 +34,6 @@ as an ``anti-debugging`` stuff.
     - [``Aegis`` from ``Go``](#aegis-from-go)
         - [``wait4debug`` on ``Go``](#wait4debug-on-go)
         - [What about a ``Gopher Gorgon``?](#what-about-a-gopher-gorgon)
-- [Contributors](#contributors)
 
 ## How can I build it?
 
@@ -75,6 +74,14 @@ black-beard@QueensAnneRevenge:~/src/aegis/src# _
 
 If all has occurred fine during your build, ``aegis`` library was built at ``../lib`` sub-directory. Additionaly,
 test has ran and all samples was built at ``../samples`` sub-directory.
+
+In order to skip tests you must invoke ``Hefesto`` with the option ``--no-tests``:
+
+```
+black-beard@QueensAnneRevenge:~/src/aegis/src# hefesto --no-tests
+(...)
+black-beard@QueensAnneRevenge:~/src/aegis/src# _
+```
 
 [``Back``](#contents)
 
@@ -406,7 +413,7 @@ After you will define in your ``go.mod`` the following:
 
 ```
 (...)
-replace github.com/rafael-santiago/aegis/gopkg => github.com/rafael-santiago/aegis/gopkg/v1
+replace github.com/rafael-santiago/aegis/gopkg => github.com/rafael-santiago/aegis/gopkg/v2
 (...)
 ```
 
@@ -533,15 +540,5 @@ func main() {
 ```
 
 The program will run until detecting a debugger be attached or being asked for gracefully exiting through a ``ctrl + C``.
-
-[``Back``](#contents)
-
-## Contributors
-
-The following table lists all project's contributors until now.
-
-|            **GitHub profile**  |       **Who**          |        **Contact**          |                            **Contributions**                            |
-|:------------------------------:|:-----------------------|:---------------------------:|:-----------------------------------------------------------------------:|
-|[<img src="https://github.com/rafael-santiago.png" width=60 height=60>](https://github.com/rafael-santiago)|Rafael Santiago|``/dev/null``|Initial idea, ``C library``, initial ``cgo-bind``, current maintainer.|
 
 [``Back``](#contents)

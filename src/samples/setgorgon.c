@@ -33,7 +33,6 @@ int main(int argc, char **argv) {
         fprintf(stderr, "error: unable to set gorgon.\n");
         exit(1);
     }
-
     fprintf(stdout, "info: process started (pid=%d)...\n", getpid());
     while (!bye) {
         usleep(2);

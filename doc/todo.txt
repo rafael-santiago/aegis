@@ -1,3 +1,4 @@
+x (A) Speed up strace detection on Linux. +Core,+Improvement
 x (B) Run go fmt over all go sources. +Core,+Housekeeping
 x (B) Document go sources. +Core,+Documentation
 x (A) Implement tests for gopkg. +Core,+Test

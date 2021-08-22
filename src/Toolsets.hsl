@@ -214,7 +214,7 @@ local function get_tag_version(default type string) : result type string {
     var exit_code type int;
     $exit_code = hefesto.sys.run("git describe --tags --abbrev=0 > .curr-tag 2>&1");
     var tag type string;
-    if ($exit_code != 0) {
+    if ($exit_code == 0) {
         var curr_tag type list;
         $curr_tag = hefesto.sys.lines_from_file(".curr-tag", ".*");
         $tag = $curr_tag.item(0);

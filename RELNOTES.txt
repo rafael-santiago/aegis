@@ -3,6 +3,17 @@
 
     Rafael
 --
+v2 [git-tag: 'v2']
+
+    Features:
+
+        - Improvement for Linux on detecting strace.
+        - Adding --no-tests build option.
+
+    Bugfixes:
+
+        - None!
+
 v1 [git-tag: 'v1']
 
     Features:
