@@ -28,6 +28,10 @@ static struct aegis_gorgon_exec_ctx g_aegis_gorgon = { 0, NULL, NULL, NULL, NULL
 static DWORD WINAPI aegis_gorgon_routine(LPVOID args);
 #endif // !defined(CGO)
 
+#define AEGIS_WIN_HAS_FLT_USER_CAPS defined(_MSC_VER) || (defined(__GNUC__) && __GNUC__ >= 11)
+
+#if AEGIS_WIN_HAS_FLT_USER_CAPS // INFO(Rafael): On versions of MINGW between 9 and 10 I was unable to compile those codes.
+
 static NTSTATUS is_procmon_sc_registered(const wchar_t *service_name, const size_t service_name_size);
 
 static HRESULT tryopen_procmon_sc(const wchar_t *service_name);
@@ -85,9 +89,14 @@ static BOOL is_procmon_present(void) {
     }
     return is;
 }
+#endif
 
 int aegis_has_debugger(void) {
+#if AEGIS_WIN_HAS_FLT_USER_CAPS
     int has = (IsDebuggerPresent() || is_procmon_present());
+#else
+    int has = (IsDebuggerPresent());
+#endif
     PPEB peb = NULL;
     DWORD nt_global_flag = 0;
     if (!has) {
