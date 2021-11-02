@@ -36,6 +36,8 @@ wait4debug.prologue() {
         $ldflags.add_item("-lpthread");
     } else if (hefesto.sys.os_name() == "openbsd") {
         $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "windows") {
+        $ldflags.add_item("-lfltlib");
     }
 }
 

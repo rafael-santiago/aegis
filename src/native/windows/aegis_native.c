@@ -28,15 +28,13 @@ static struct aegis_gorgon_exec_ctx g_aegis_gorgon = { 0, NULL, NULL, NULL, NULL
 static DWORD WINAPI aegis_gorgon_routine(LPVOID args);
 #endif // !defined(CGO)
 
-#if 0
-
 static NTSTATUS is_procmon_sc_registered(const wchar_t *service_name, const size_t service_name_size);
 
 static HRESULT tryopen_procmon_sc(const wchar_t *service_name);
 
-BOOL do_is_procmon_present(const wchar_t *service_name, const size_t service_name_size);
+static BOOL do_is_procmon_present(const wchar_t *service_name, const size_t service_name_size);
 
-BOOL is_procmon_present(void);
+static BOOL is_procmon_present(void);
 
 static NTSTATUS is_procmon_sc_registered(const wchar_t *service_name, const size_t service_name_size) {
     HKEY hk;
@@ -60,7 +58,7 @@ static HRESULT tryopen_procmon_sc(const wchar_t *service_name) {
     return res;
 }
 
-BOOL do_is_procmon_present(const wchar_t *service_name, const size_t service_name_size) {
+static BOOL do_is_procmon_present(const wchar_t *service_name, const size_t service_name_size) {
     HRESULT res = tryopen_procmon_sc(service_name);
     switch (res) {
         case S_OK:
@@ -72,7 +70,7 @@ BOOL do_is_procmon_present(const wchar_t *service_name, const size_t service_nam
     return FALSE;
 }
 
-BOOL is_procmon_present(void) {
+static BOOL is_procmon_present(void) {
     static const wchar_t *procmon_scs[] = {
         L"PROCMON24",
         L"PROCMON23",
@@ -88,10 +86,8 @@ BOOL is_procmon_present(void) {
     return is;
 }
 
-#endif
-
 int aegis_has_debugger(void) {
-    int has = (IsDebuggerPresent() /*|| is_procmon_present()*/);
+    int has = (IsDebuggerPresent() || is_procmon_present());
     PPEB peb = NULL;
     DWORD nt_global_flag = 0;
     if (!has) {
