@@ -38,10 +38,10 @@ static BOOL is_procmon_present(void);
 
 static NTSTATUS is_procmon_sc_registered(const wchar_t *service_name, const size_t service_name_size) {
     HKEY hk;
-    wchar_t w_subkey[1024] = L"";
-    wcsncpy_s(w_subkey, sizeof(w_subkey) - 2, L"System\\CurrentControlSet\\Services\\",
-    wcslen(L"System\\CurrentControlSet\\Services\\"));
-    wcsncat_s(w_subkey, sizeof(w_subkey) - 2, service_name, service_name_size);
+    wchar_t w_subkey[1024];
+    wcsncpy_s(w_subkey, sizeof(w_subkey) / sizeof(w_subkey[0]) - 2, L"System\\CurrentControlSet\\Services\\",
+              wcslen(L"System\\CurrentControlSet\\Services\\"));
+    wcsncat_s(w_subkey, sizeof(w_subkey) / sizeof(w_subkey[0]) - 2, service_name, service_name_size);
     NTSTATUS retval = RegOpenKeyExW(HKEY_LOCAL_MACHINE, w_subkey, 0, KEY_QUERY_VALUE, &hk);
     if (retval == ERROR_SUCCESS) {
         RegCloseKey(hk);
