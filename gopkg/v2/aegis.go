@@ -21,6 +21,7 @@ package aegis
 #elif defined(__OpenBSD__)
 # include <native/openbsd/aegis_native.c>
 #elif defined(_WIN32)
+#cgo LDFLAGS: -lfltlib
 # include <native/windows/aegis_native.c>
 #endif
 */
