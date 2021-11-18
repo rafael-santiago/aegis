@@ -21,6 +21,11 @@ int aegis_has_debugger(void) {
     size_t kp_len = sizeof(kp);
     int pidinfo_args[6] = { CTL_KERN, KERN_PROC, KERN_PROC_PID, (int)pid, kp_len, 1 };
     int is = 0;
+
+    fflush(stdout);
+    fflush(stdin);
+    fflush(stderr);
+
     if ((cpid = fork()) == 0) {
         if (sysctl(pidinfo_args, nitems(pidinfo_args),
                    &kp, &kp_len, NULL, 0) == 0) {

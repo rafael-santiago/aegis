@@ -21,6 +21,10 @@ int aegis_has_debugger(void) {
     ssize_t proc_buf_size = 0;
     pid_t pid = getpid();
 
+    fflush(stdout);
+    fflush(stdin);
+    fflush(stderr);
+
     if (fork() == 0) {
         snprintf(proc_filepath, sizeof(proc_filepath) - 2, "/proc/%d/stat", pid);
         if ((fd = open(proc_filepath, O_RDONLY)) != -1) {
